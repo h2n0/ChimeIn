@@ -42,7 +42,7 @@ function createSession(uname){
 
 function joinSession(id, name){
   sessions[id].users.push({name:name, isAdmin: false});
-  console.log("Update #" + id + ": " + name + " joined the party")
+  console.log("Update #" + id + ": " + name + " joined the party!")
   return sessions[id];
 }
 
@@ -59,8 +59,8 @@ app.get("/about", (req, res) =>{
 
 app.get("/login", (req, res) => {
   let scopes = "user-read-private user-read-email";
-  let redirect_uri = "localhost:"+port+"/"
-  let client_id =
+  let redirect_uri = "localhost:"+port+"/";
+  let client_id = "NOTHING!";
   res.redirect('https://accounts.spotify.com/authorize' +
   '?response_type=code' +
   '&client_id=' + my_client_id +
