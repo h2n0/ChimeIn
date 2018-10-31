@@ -42,7 +42,7 @@ function createSession(uname){
 
 function joinSession(id, name){
   sessions[id].users.push({name:name, isAdmin: false});
-  console.log("Update #" + id + ": " + name + " joined the party!")
+  console.log("Update #" + id + ": " + name + " joined the party")
   return sessions[id];
 }
 
