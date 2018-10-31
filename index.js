@@ -87,7 +87,6 @@ app.get("/join", (req, res) =>{
 });
 app.get("/list", (req, res) => {
   console.log(sessions)
-  res.send("Look in the console");
 });
 
 app.get("/session/:id", (req, res) => {
