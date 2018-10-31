@@ -1,0 +1,25 @@
+{
+  "name": "chimein",
+  "version": "1.0.0",
+  "description": "Group Spotify sessions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h2n0/ChimeIn.git"
+  },
+  "author": "Elliot Lee-Cerrino",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/h2n0/ChimeIn/issues"
+  },
+  "homepage": "https://github.com/h2n0/ChimeIn#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "pug": "^2.0.3",
+    "spotify-web-api-node": "^4.0.0"
+  }
+}

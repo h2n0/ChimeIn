@@ -1,0 +1,11 @@
+extends base.pug
+
+block scripts
+  script(src="/scripts/valid.js")
+
+
+block content
+  p Hello there, Looking to join a session?
+  form(action="join", id="sessionForm")
+    span Session ID:
+    input(name="id", id="sessionId", required, autocomplete="off", placeholder="123-456-789").sessionID

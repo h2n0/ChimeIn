@@ -1,0 +1,25 @@
+extends base
+
+block scripts
+  script(src="https://sdk.scdn.co/spotify-player.js")
+  script(src="/scripts/spot.js")
+
+block content
+  unless error != null
+    h2 SessionId: #{sessionID}
+    div.left(style="float:left")
+      ul
+        each u in session.users
+          li= u.name
+    div.right(style="float:right")
+      div
+        input(placeholder="search")
+
+      div
+        ul
+          li Song1
+          li Song2
+          li Song3
+  else
+    h2 Error
+    p #{error}
