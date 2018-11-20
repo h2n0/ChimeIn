@@ -1,9 +1,16 @@
+let player = null;
+let defVol = 0.25;
+
+
 window.onSpotifyWebPlaybackSDKReady = () => {
-  const token = 'BQBp-VbSVMk9716whAXICsEbvpdYdB_l_VY1QQnPT5OhAE-nEle6qSynTQKA2p5xy4Os21TuYkYr87K1Dn65yUM_JXrSUeysRUtBTYWHb5BwgHZRkIMiZWI7cvypbIC4cuiKv4ztx0Qcz9dzxJlzsQHkXQF7HaW6';
-  const player = new Spotify.Player({
-    name: 'Web Playback SDK Quick Start Player',
+  const token = getCookie("spotID");
+  player = new Spotify.Player({
+    name: 'Chimein',
     getOAuthToken: cb => { cb(token); }
   });
+
+  let lpos = 0;
+  let lId = 0;
 
   // Error handling
   player.addListener('initialization_error', ({ message }) => { console.error(message); });
@@ -12,11 +19,43 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   player.addListener('playback_error', ({ message }) => { console.error(message); });
 
   // Playback status updates
-  player.addListener('player_state_changed', state => { console.log(state); });
+  player.addListener('player_state_changed', state => {
+    if(!state)return;
+    let npos = state.position;
+    let current = state.track_window.current_track;
+    let id = current.id;
+    if(npos < lpos && id != lId){
+      console.log("New Song!");
+      get("/queue/next", (data) => {
+        let d = data.substring(1, data.length-1);
+        if(d == null)return;
+        playSong(token, d, (res) => {
+          console.log(res);
+        });
+      });
+      lId = id;
+    }
+
+    lpos = npos;
+    let album = current.album;
+    let albumArt = album.images[0].url;
+    let artist = current.artists[0].name;
+    let songName = current.name;
+    document.getElementById("playing").src = albumArt;
+    document.getElementById("NAT").innerHTML = g + encodeURI(songName + " by " + artist);
+
+    get("/track/"+id, (data) => {
+      let j = JSON.parse(data).body;
+      document.getElementById("imageLink").href = j["external_urls"]["spotify"];
+    });
+  });
 
   // Ready
   player.addListener('ready', ({ device_id }) => {
     console.log('Ready with Device ID', device_id);
+    player.setVolume(defVol).then(() => {
+      console.log('Volume updated!');
+    });
   });
 
   // Not Ready

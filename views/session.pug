@@ -1,25 +1,32 @@
 extends base
 
 block scripts
-  script(src="https://sdk.scdn.co/spotify-player.js")
+  script(src="/scripts/cookies.js")
+  script(src="/scripts/ajax.js")
   script(src="/scripts/spot.js")
+  if host
+    script(src="https://sdk.scdn.co/spotify-player.js")
+
+  script(src="/scripts/tabs.js")
 
 block content
-  unless error != null
-    h2 SessionId: #{sessionID}
-    div.left(style="float:left")
-      ul
-        each u in session.users
-          li= u.name
-    div.right(style="float:right")
-      div
-        input(placeholder="search")
+  div
+    a(href="http://google.com", id="imageLink")
+      img(src="https://baconmockup.com/300/300", id="playing", style="display:block; margin: auto;")
+      p(style="text-align: center; font-size: 1.8em", id="NAT") Song name
 
-      div
-        ul
-          li Song1
-          li Song2
-          li Song3
-  else
-    h2 Error
-    p #{error}
+  div.tabs
+    button(onclick="openTab(0)").active Queue
+    button(onclick="openTab(1)") Search
+
+
+  div.tabContainer(index=0)
+    div
+      ul
+        li Hello
+        li World!
+
+  div.tabContainer.hidden(index=1)
+    div
+      input(id="songSearch")
+      ul(id="q")

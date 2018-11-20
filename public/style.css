@@ -1,6 +1,8 @@
 body{
   background-color: #02182E;
   color: white;
+  font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;
+  font-size: 62.5%;
 }
 
 
@@ -10,6 +12,12 @@ a.title{
 
 h1{
   color: #ECB613;
+  font-size: 4em;
+}
+
+div.partyOptions{
+  width: 50%;
+  margin: 0 auto;
 }
 
 div.title{
@@ -19,19 +27,107 @@ div.title{
 }
 
 .option{
-  width: 20%;
-  height: 50%;
-  background-color: #CC0;
+  width: 50%;
+  height: 12%;
+  background-color: #C00;
   float: left;
-  margin-right: 20px;
+  border-radius: 10px;
+  font-size: 2.5em;
+  margin: 0 auto;
+  margin-bottom: 3%;
+  margin-left: 25%;
+  display: flex;
+}
+
+.option p{
+  margin: auto;
   text-align: center;
 }
 
+form#sessionForm{
+  width: 50%;
+  margin: 0 auto;
+}
 
 input.sessionID{
+  display: block;
+  width: 50%;
   border: none;
   background-color: inherit;
   border-bottom: 1px solid white;
   text-align: center;
   color: white;
+  margin: 0 auto;
+  font-size: 1.75em;
+  padding-top: 25%;
+  margin-bottom: 5%;
+}
+
+a:visited{
+  color: inherit;
+}
+
+
+div.content{
+  width: 75%;
+  margin: 0 auto;
+}
+
+
+div.queueHider{
+  width: 100%;
+  font-size: 2em;
+}
+
+div.tab{
+  width: 50%;
+  text-align: center;
+  float: left;
+  cursor: pointer;
+  background-color: #004387;
+  border-radius: 10px;
+}
+
+.tabs button{
+  width: 50%;
+  background-color: #001145;
+  border: none;
+  color: inherit;
+  font: inherit;
+  font-size: 2em;
+  cursor: pointer;
+  padding: 2%;
+}
+
+.tabs button.active{
+  background-color: #003B39;
+}
+
+
+.tabContainer{
+  background-color: #003B39;
+}
+
+.tabContainer div{
+  padding: 5%;
+}
+
+.hidden{
+  display: none;
+}
+
+
+ul li{
+  display: block;
+  width: 100%;
+  height: 5%;
+}
+
+li.searchEven{
+  background-color: #F0F;
+}
+
+
+li.searchOdd{
+  background-color: #303;
 }

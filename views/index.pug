@@ -1,11 +1,15 @@
 extends base.pug
 
 
-block content
-  a(href="/create")
-    div.option
-      p Host
 
-  a(href="/join")
-    div.option
-      p Join
+block content
+  unless user
+    h2 You need to login
+    a(href="/login") Login
+  else
+    h2 Logged in as #{user}
+    p You can go to the 
+      a(href="/session") Session
+
+    a(href="/logout")
+      h3 Logout
