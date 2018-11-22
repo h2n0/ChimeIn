@@ -4,9 +4,12 @@ block scripts
   script(src="/scripts/cookies.js")
   script(src="/scripts/ajax.js")
   script(src="/scripts/spot.js")
+
   if host
     script(src="https://sdk.scdn.co/spotify-player.js")
-
+  else
+    script(src="/scripts/guest.js")
+    
   script(src="/scripts/tabs.js")
 
 block content

@@ -6,10 +6,16 @@ let SpotifyWebApi = require('spotify-web-api-node');
 let bodyParser = require("body-parser");
 let User = require("./backend/user.js");
 let Session = require("./backend/session.js");
+let AutoTrack = require("./backend/autotrack.js");
 let config = require("./backend/config.js");
 let spotify = new SpotifyWebApi(config);
 let request = require("request");
+
+
 let queue = [];
+let currentId = null;
+let currentData = null;
+let recc = new AutoTrack();
 
 app.set('view engine', 'pug');
 app.use(express.static('public'));
@@ -43,6 +49,7 @@ app.get("/auth", (req,res) => {
 
       res.cookie("spotID", token);
       spotify.setAccessToken(token);
+      spotify.setRefreshToken(refresh);
       spotify.getMe( (err, data) => {
         name = data.body["display_name"];
         res.cookie("spotName", name);
@@ -80,8 +87,67 @@ app.get("/search/:term", (req, res) => {
   });
 });
 
+app.get("/queue/current", (req,res) => {
+  if(currentData){
+    return res.send(currentData);
+  }
+  if(!currentId){
+    res.send(JSON.stringify(null));
+  }else{
+    let id = currentId.split(":");
+    id = id[id.length-1];
+    recc.addElement(id);
+    spotify.getTrack(id, (err,data) =>{
+      if(err) {
+        res.send(null);
+      } else {
+        let body = data.body;
+        let name = body.name;
+        let uri = body.uri;
+
+        let d = {
+          name:name,
+          uri:uri,
+          artist: { name:body.artists[0].name, id: body.artists[0].id},
+          images: [
+            body.album.images[0].url,
+            body.album.images[1].url
+          ],
+          next: body.duration_ms,
+          started: Date.now()
+        }
+
+        currentData = d;
+        res.send(d);
+      }
+    });
+  }
+});
+
+
 app.get("/queue/next", (req,res) =>{
-  res.send(JSON.stringify(queue.shift() || null));
+  let id = queue.shift() || null;
+  currentId = id;
+  currentData = null;
+  if(id == null){
+    let q = recc.getQueue();
+
+    let params = {
+      seed_artits:q
+    };
+
+    console.log(params);
+    spotify.getRecommendations(params, (err,data) =>{
+      if(err){
+        console.error("Reccomendations Error: ", err);
+      }else{
+        console.log("Reccs!");
+        res.send(data);
+      }
+    });
+  }else{
+    res.send(id);
+  }
 });
 
 app.get("/queue/all", (req,res) => {
@@ -89,9 +155,16 @@ app.get("/queue/all", (req,res) => {
 });
 
 app.get("/queue/push/:id", (req,res) =>{
-  let t = req.params.id;
-  queue.push(t);
+  let id = req.params.id;
+  queue.push(id);
+  console.log("Pushed to the queue: " + id)
   res.send("{error:null}");
+});
+
+app.get("/queue/set/:id", (req,res) =>{
+  let id = req.params.id;
+  currentId = id;
+  console.log("Connection with id: " + id)
 });
 
 app.get("/logout", (req,res) => {
@@ -99,26 +172,6 @@ app.get("/logout", (req,res) => {
   res.clearCookie("spotId");
   res.clearCookie("sessionHost");
   res.redirect("/");
-});
-
-
-app.get("/search/:term", (req, res) => {
-  let user = users[req.param.user]
-  let out = {body:{}, error:""}
-
-  if(!user){
-    out.error = "Not a valid user!";
-  }else{
-    user
-  }
-
-  res.send(out);
-});
-
-app.get("/set/:uri", (req, res) =>{
-  let uri = req.params.uri;
-  currentSongURI = uri;
-  res.send("{res:\"Done!\"}")
 });
 
 

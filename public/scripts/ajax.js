@@ -37,7 +37,4 @@ function playSong(token, songURI, callback){
   xhttp.setRequestHeader("Authorization","Bearer " + token);
   xhttp.setRequestHeader("Content-Type","application/json");
   xhttp.send(data);
-
-  console.log(xhttp);
-  console.log(data);
 }

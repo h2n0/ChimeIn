@@ -1,6 +1,7 @@
 let player = null;
 let defVol = 0.25;
-
+let connected = false;
+let lconnected = false;
 
 window.onSpotifyWebPlaybackSDKReady = () => {
   const token = getCookie("spotID");
@@ -11,6 +12,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
   let lpos = 0;
   let lId = 0;
+  let lState = null;
 
   // Error handling
   player.addListener('initialization_error', ({ message }) => { console.error(message); });
@@ -20,20 +22,32 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
   // Playback status updates
   player.addListener('player_state_changed', state => {
+    if(!state){
+      connected = false;
+    }else{
+      connected = true;
+    }
+
+    if(connected && !lconnected){// User has connected
+      let uri = state.track_window.current_track.uri;
+      get("/queue/set/"+uri, (data) =>{ // Set the queue to this
+
+      });
+    }
+
+    lconnected = connected;
     if(!state)return;
     let npos = state.position;
     let current = state.track_window.current_track;
     let id = current.id;
-    if(npos < lpos && id != lId){
-      console.log("New Song!");
-      get("/queue/next", (data) => {
-        let d = data.substring(1, data.length-1);
-        if(d == null)return;
-        playSong(token, d, (res) => {
-          console.log(res);
-        });
+    if(npos < lpos && id != lId && npos == 0){
+      console.log("New song!");
+      get("/queue/next", (id) => {
+        if(id == null)return;
+        playSong(token, id);
       });
       lId = id;
+      lpos = npos;
     }
 
     lpos = npos;
@@ -42,7 +56,8 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     let artist = current.artists[0].name;
     let songName = current.name;
     document.getElementById("playing").src = albumArt;
-    document.getElementById("NAT").innerHTML = g + encodeURI(songName + " by " + artist);
+    let displayLink = songName + " by " + artist;
+    document.getElementById("NAT").innerHTML = displayLink;
 
     get("/track/"+id, (data) => {
       let j = JSON.parse(data).body;

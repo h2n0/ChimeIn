@@ -26,8 +26,11 @@ var queue = [];
 window.onload = function(){
   let searchBox = document.getElementById("songSearch");
   let list = document.getElementById("q");
-  searchBox.onkeyup = (e) => {
+
+  searchBox.onkeydown = (e) => {
+    if(e.keyCode != 13)return; // Pres enter to search!
     let v = searchBox.value.trim();
+    v = encodeURI(v);
     get("/search/"+v, (data) =>{
       let d = JSON.parse(data)
       let tracks = d.body.tracks.items;
@@ -47,5 +50,10 @@ window.onload = function(){
         list.appendChild(nl);
       }
     });
+  }
+
+  //Guest.js
+  if(guests){
+    setCurrentInfo();
   }
 }
