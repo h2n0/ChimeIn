@@ -131,3 +131,8 @@ li.searchEven{
 li.searchOdd{
   background-color: #303;
 }
+
+li.queueItem{
+  width: 100%;
+  height: 120px;
+}

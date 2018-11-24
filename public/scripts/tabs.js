@@ -54,6 +54,7 @@ window.onload = function(){
 
   //Guest.js
   if(guests){
+    updateQueue();
     setCurrentInfo();
   }
 }

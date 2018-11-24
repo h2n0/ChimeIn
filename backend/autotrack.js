@@ -5,7 +5,7 @@ class AutoTrack{
   }
 
   addElement(e){
-    if(this.queue.length > this.size){
+    if(this.queue.length >= this.size){
       this.queue.shift();
     }
     this.queue.push(e);

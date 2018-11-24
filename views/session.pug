@@ -9,7 +9,7 @@ block scripts
     script(src="https://sdk.scdn.co/spotify-player.js")
   else
     script(src="/scripts/guest.js")
-    
+
   script(src="/scripts/tabs.js")
 
 block content
@@ -25,9 +25,7 @@ block content
 
   div.tabContainer(index=0)
     div
-      ul
-        li Hello
-        li World!
+      ul(id="queue")
 
   div.tabContainer.hidden(index=1)
     div

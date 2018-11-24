@@ -15,6 +15,8 @@ let request = require("request");
 let queue = [];
 let currentId = null;
 let currentData = null;
+let currentHumanQueue = [];
+let currentSession = new Session();
 let recc = new AutoTrack();
 
 app.set('view engine', 'pug');
@@ -111,7 +113,8 @@ app.get("/queue/current", (req,res) => {
           artist: { name:body.artists[0].name, id: body.artists[0].id},
           images: [
             body.album.images[0].url,
-            body.album.images[1].url
+            body.album.images[1].url,
+            body.album.images[2].url
           ],
           next: body.duration_ms,
           started: Date.now()
@@ -152,6 +155,42 @@ app.get("/queue/next", (req,res) =>{
 
 app.get("/queue/all", (req,res) => {
   res.send(JSON.stringify(queue || null));
+});
+
+app.get("/queue/human", (req,res) => {
+  let nq = [];
+  for(let i = 0; i < queue.length; i++){
+    let uri = queue[i].split(":");
+    let id = uri[uri.length-1];
+    nq.push(id);
+  }
+
+  if(nq == []){
+    res.send([]);
+  }else{
+    if(currentHumanQueue.length == nq.length){
+      res.send(currentHumanQueue);
+    }else{
+      spotify.getTracks(nq, (err,data) => {
+        if(!data){
+          res.send([]);
+        }else{
+          let j = data.body;
+          let out = [];
+          for(let l = 0; l < j.tracks.length; l++){
+            let current = j.tracks[l];
+            out.push({
+              name: current.name,
+              artist: current.artists[0].name,
+              img: current.album.images[2].url
+            })
+          }
+          currentHumanQueue = out;
+          res.send(out);
+        }
+      });
+    }
+  }
 });
 
 app.get("/queue/push/:id", (req,res) =>{
