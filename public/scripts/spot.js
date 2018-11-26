@@ -2,6 +2,32 @@ let player = null;
 let defVol = 0.25;
 let connected = false;
 let lconnected = false;
+let lastID = null;
+var guests = false;
+
+
+function getNextAndPlay(token){
+  get("/queue/next", (data) => {
+    let j = JSON.parse(data);
+    if(j.status != 200){// Nothing next in the queue so lets try again soon
+      setTimeout( () => {
+        getNextAndPlay(token);
+      }, 1000 * 2);
+    }else{// SOmething was in the queue so we are going to try and play it
+      playSong(token, j.id, (err, data) => {
+        get("/queue/current", (data) => {
+          let j = JSON.parse(data);
+          if(j.status == 404){
+            console.log("Currently no song playing!");
+            return;
+          }else{
+            console.log("Playing " + j.name + " by " + j.artist.name);
+          }
+        });
+      });
+    }
+  });
+}
 
 window.onSpotifyWebPlaybackSDKReady = () => {
   const token = getCookie("spotID");
@@ -28,11 +54,12 @@ window.onSpotifyWebPlaybackSDKReady = () => {
       connected = true;
     }
 
-    if(connected && !lconnected){// User has connected
+    if(connected && !lconnected){ // User has connected
       let uri = state.track_window.current_track.uri;
-      get("/queue/set/"+uri, (data) =>{ // Set the queue to this
-
-      });
+      let p = uri.split(":");
+      lastID = p[p.length-1];
+      get("/queue/set/"+uri);
+      getNextAndPlay(token);
     }
 
     lconnected = connected;
@@ -40,29 +67,14 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     let npos = state.position;
     let current = state.track_window.current_track;
     let id = current.id;
-    if(npos < lpos && id != lId && npos == 0){
+    if(npos == 0 && state.paused == true && id != lId){
       console.log("New song!");
-      get("/queue/next", (id) => {
-        if(id == null)return;
-        playSong(token, id);
-      });
+      get("/queue/pop");
+      getNextAndPlay(token);
       lId = id;
-      lpos = npos;
     }
 
     lpos = npos;
-    let album = current.album;
-    let albumArt = album.images[0].url;
-    let artist = current.artists[0].name;
-    let songName = current.name;
-    document.getElementById("playing").src = albumArt;
-    let displayLink = songName + " by " + artist;
-    document.getElementById("NAT").innerHTML = displayLink;
-
-    get("/track/"+id, (data) => {
-      let j = JSON.parse(data).body;
-      document.getElementById("imageLink").href = j["external_urls"]["spotify"];
-    });
   });
 
   // Ready

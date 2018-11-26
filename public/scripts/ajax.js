@@ -2,7 +2,7 @@ function get(url, callback) {
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-     callback(this.responseText)
+      if(callback)callback(this.responseText)
     }
   };
   xhttp.open("GET", url, true);
@@ -14,7 +14,7 @@ function post(url, data, callback){
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-     callback(this.responseText)
+      if(callback)callback(this.responseText)
     }
   };
   xhttp.open("POST", url, true);
@@ -26,8 +26,11 @@ function post(url, data, callback){
 function playSong(token, songURI, callback){
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-     callback(this.responseText)
+    if (this.readyState == 4) {
+      if(callback){
+        let sc = Math.floor(this.statusCode / 100);
+        callback(sc==4?"Something has gone wrong":null, this.responseText);
+      }
     }
   };
   let url = "https://api.spotify.com/v1/me/player/play";

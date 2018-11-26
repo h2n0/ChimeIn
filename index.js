@@ -84,8 +84,7 @@ app.get("/search/:term", (req, res) => {
   spotify.searchTracks(d, {limit:5}).then( (data) => {
     res.send(data);
   }, (err) => {
-    console.error(err);
-    res.send("{error:'"+err+"'}")
+    res.send(JSON.stringify({error:err}))
   });
 });
 
@@ -94,14 +93,17 @@ app.get("/queue/current", (req,res) => {
     return res.send(currentData);
   }
   if(!currentId){
-    res.send(JSON.stringify(null));
+    let d = {
+      status: 404
+    }
+    res.send(JSON.stringify(d));
   }else{
     let id = currentId.split(":");
     id = id[id.length-1];
     recc.addElement(id);
     spotify.getTrack(id, (err,data) =>{
       if(err) {
-        res.send(null);
+        res.send(JSON.stringify(null));
       } else {
         let body = data.body;
         let name = body.name;
@@ -117,7 +119,9 @@ app.get("/queue/current", (req,res) => {
             body.album.images[2].url
           ],
           next: body.duration_ms,
-          started: Date.now()
+          started: Date.now(),
+          link: body["external_urls"]["spotify"],
+          status: 100
         }
 
         currentData = d;
@@ -129,28 +133,27 @@ app.get("/queue/current", (req,res) => {
 
 
 app.get("/queue/next", (req,res) =>{
-  let id = queue.shift() || null;
+  let id = queue[0] || null;
   currentId = id;
   currentData = null;
-  if(id == null){
-    let q = recc.getQueue();
+  currentHumanQueue = null;
 
-    let params = {
-      seed_artits:q
-    };
-
-    console.log(params);
-    spotify.getRecommendations(params, (err,data) =>{
-      if(err){
-        console.error("Reccomendations Error: ", err);
-      }else{
-        console.log("Reccs!");
-        res.send(data);
-      }
-    });
-  }else{
-    res.send(id);
+  let resp = {
+    id : null,
+    status : 404
   }
+
+  if(id != null){
+    resp.id = id;
+    resp.status = 200;
+  }
+
+  res.send(JSON.stringify(resp));
+});
+
+app.get("/queue/pop", (req, res) => {
+  queue.shift()
+  res.send("done")
 });
 
 app.get("/queue/all", (req,res) => {
@@ -159,7 +162,7 @@ app.get("/queue/all", (req,res) => {
 
 app.get("/queue/human", (req,res) => {
   let nq = [];
-  for(let i = 0; i < queue.length; i++){
+  for(let i = 1; i < queue.length; i++){
     let uri = queue[i].split(":");
     let id = uri[uri.length-1];
     nq.push(id);
@@ -168,28 +171,24 @@ app.get("/queue/human", (req,res) => {
   if(nq == []){
     res.send([]);
   }else{
-    if(currentHumanQueue.length == nq.length){
-      res.send(currentHumanQueue);
-    }else{
-      spotify.getTracks(nq, (err,data) => {
-        if(!data){
-          res.send([]);
-        }else{
-          let j = data.body;
-          let out = [];
-          for(let l = 0; l < j.tracks.length; l++){
-            let current = j.tracks[l];
-            out.push({
-              name: current.name,
-              artist: current.artists[0].name,
-              img: current.album.images[2].url
-            })
-          }
-          currentHumanQueue = out;
-          res.send(out);
+    spotify.getTracks(nq, (err,data) => {
+      if(!data){
+        res.send([]);
+      }else{
+        let j = data.body;
+        let out = [];
+        for(let l = 0; l < j.tracks.length; l++){
+          let current = j.tracks[l];
+          out.push({
+            name: current.name,
+            artist: current.artists[0].name,
+            img: current.album.images[2].url
+          })
         }
-      });
-    }
+        currentHumanQueue = out;
+        res.send(out);
+      }
+    });
   }
 });
 
@@ -203,7 +202,7 @@ app.get("/queue/push/:id", (req,res) =>{
 app.get("/queue/set/:id", (req,res) =>{
   let id = req.params.id;
   currentId = id;
-  console.log("Connection with id: " + id)
+  console.log("Connection with id: " + id);
 });
 
 app.get("/logout", (req,res) => {

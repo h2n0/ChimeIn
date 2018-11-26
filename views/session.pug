@@ -14,12 +14,12 @@ block scripts
 
 block content
   div
-    a(href="http://google.com", id="imageLink")
+    a(href="http://google.com", id="imageLink", target="_blank")
       img(src="https://baconmockup.com/300/300", id="playing", style="display:block; margin: auto;")
       p(style="text-align: center; font-size: 1.8em", id="NAT") Song name
 
   div.tabs
-    button(onclick="openTab(0)").active Queue
+    button(onclick="openTab(0)", id="qHead").active Queue
     button(onclick="openTab(1)") Search
 
 
