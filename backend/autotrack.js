@@ -1,3 +1,5 @@
+// First song ever suggested: https://open.spotify.com/track/3aS8qJ2zl30WllXN4J24zV
+
 class AutoTrack{
   constructor(){
     this.size = 5;

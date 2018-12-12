@@ -136,3 +136,37 @@ li.queueItem{
   width: 100%;
   height: 120px;
 }
+
+
+@media only screen and (max-width: 600px) {
+
+    body{
+      margin: 0;
+    }
+
+    div.content{
+      width: 100%;
+    }
+
+    div.tabContainer{
+      width: 100%;
+    }
+
+    div.tabContainer input{
+      width: 100%;
+    }
+
+    ul#q{
+      width: 100%;
+      padding-left: 0;
+    }
+
+    ul#q li{
+      width: 100%;
+      height: 3em;
+    }
+
+    a{
+      color: #ECB613;
+    }
+}

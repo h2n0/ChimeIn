@@ -26,10 +26,9 @@ function post(url, data, callback){
 function playSong(token, songURI, callback){
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
-    if (this.readyState == 4) {
+    if (this.readyState == 4 && this.statusCode == 204) {
       if(callback){
-        let sc = Math.floor(this.statusCode / 100);
-        callback(sc==4?"Something has gone wrong":null, this.responseText);
+        callback(null, this.responseText);
       }
     }
   };

@@ -74,12 +74,8 @@ function updateQueue(){
 function setCurrentInfo(){
   get("/queue/current", (data) => {
     let j = JSON.parse(data);
-
     if(j.status == 404){
-      console.log("No song yet!");
-      setTimeout( () => {
-        setCurrentInfo();
-      }, 1000 * 10);
+
     }else{
       let name = j.name
       let aName = j.artist.name;
@@ -90,18 +86,6 @@ function setCurrentInfo(){
       document.getElementById("playing").src = img;
       document.getElementById("NAT").innerHTML = display;
       document.getElementById("imageLink").href = j.link;
-
-      let now = Date.now();
-      let then = j.started + j.next;
-      let off = 20;
-
-      let when = then - now - off;
-      if(when < 0)when = 2000; // Spotiy needs time to load the new track so let's give it some
-      setTimeout( () => {
-        console.log("Automated info checker!");
-        setCurrentInfo();
-        updateQueue();
-      }, when);
     }
   });
 }
@@ -128,22 +112,45 @@ window.onload = function(){
       if(d.statusCode == 401){
         console.log(d.error);
       }else{
-        let tracks = d.body.tracks.items;
         list.innerHTML = "";
-        for(let i = 0; i < tracks.length; i++){
-          let track = tracks[i];
-          let banding = i % 2 == 0;
+        if(d.body.tracks){
+          let tracks = d.body.tracks.items;
+          for(let i = 0; i < tracks.length; i++){
+            let track = tracks[i];
+            let banding = i % 2 == 0;
 
-          let nl = document.createElement("li");
-          nl.innerHTML = track.name + " - " + track.artists[0].name;
-          nl.classList.add("search" + (banding?"even":"odd"));
-          nl.onmousedown = (e) => {
-            get("/queue/push/"+track.uri, (data) => {
-              console.log("Added song to queue!");
-              alert("Added song!");
-              updateQueue();
-            });
+            let nl = document.createElement("li");
+            nl.innerHTML = track.name + " - " + track.artists[0].name;
+            nl.classList.add("search" + (banding?"even":"odd"));
+            nl.onmousedown = (e) => {
+              if (confirm("Adding " + track.name)) {
+                get("/queue/push/"+track.uri, (data) => {
+                  console.log("Added song to queue!");
+                  updateQueue();
+                });
+              } else {
+                txt = "You pressed Cancel!";
+              }
+            }
+            list.appendChild(nl);
           }
+        }else{ // Single track has been returned
+          console.log(d);
+          let nl = document.createElement("li");
+          nl.innerHTML = d.body.name + " - " + d.body.artists[0].name;
+          nl.classList.add("searcheven");
+
+          nl.onmousedown = (e) => {
+            if (confirm("Adding " + d.body.name)) {
+              get("/queue/push/"+d.body.uri, (data) => {
+                console.log("Added song to queue!");
+                updateQueue();
+              });
+            } else {
+              txt = "You pressed Cancel!";
+            }
+          }
+
           list.appendChild(nl);
         }
       }
