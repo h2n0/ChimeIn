@@ -1,6 +1,7 @@
 # Chimein todo
 - first song added isn't actually added [X]
+- recomendation 429 error code, too many requests
 
 
 ## Chimein maybes
-- User specific song removal
+- User specific song removal (semi-done)

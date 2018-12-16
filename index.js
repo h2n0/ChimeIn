@@ -23,7 +23,7 @@ let recc = new AutoTrack();
 app.set('view engine', 'pug');
 app.use(express.static('public'));
 app.use(cookie());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 
 function checkExpire(){
@@ -36,7 +36,7 @@ function checkExpire(){
           console.error(err);
         }else{
           let token = data.body.access_token;
-          let expire = data.body.expires;
+          let expire = data.body.expires_in;
           sessionHolder.renewTokens(token, expire);
           spotify.setAccessToken(token);
         }
@@ -85,6 +85,11 @@ app.get("/auth", (req,res) => {
   });
 });
 
+app.get("/auth/refresh", (req, res) => {
+  checkExpire();
+  res.status(200).end();
+});
+
 app.get("/host", (req, res) => {
   res.cookie("sessionHost", "true");
   res.redirect("/login");
@@ -104,17 +109,23 @@ app.get("/track/:id", (req, res) => {
   });
 });
 
-app.get("/search/:term", (req, res) => {
+app.post("/search", (req, res) => {
 
   checkExpire();
 
-  let d = req.params.term.trim()
+  let d = req.body.query.trim();
+  let songReg = new RegExp("\/track\/([0-9A-Za-z]*)");
+  let reg = d.match(songReg);
 
-  if(d.indexOf(":") != -1){ // Spotify URI
+  if(d.indexOf(":") != -1 || reg){ // Spotify URI
                             // It's a very specific search
-    let p = d.split(":");
-    d = p[p.length-1];
-
+    if(!reg){
+      let p = d.split(":");
+      d = p[p.length-1];
+    }else{
+      d = reg[1];
+    }
+    d = d.trim();
     spotify.getTrack(d, (err,data) => {
       if(err){
         console.error(err);
@@ -123,10 +134,14 @@ app.get("/search/:term", (req, res) => {
       }
     });
   }else{
-    spotify.searchTracks(d, {limit:5}).then( (data) => {
-      res.send(data);
-    }, (err) => {
-      res.send(JSON.stringify({error:err}))
+    spotify.searchTracks(d, {limit:5}, (err, data) => {
+      if(err){
+        console.error("Looking for a song failed!")
+        console.error(err);
+        res.send(JSON.stringify({error:err}))
+      }else{
+        res.send(data);
+      }
     });
   }
 });
@@ -135,9 +150,10 @@ app.get("/queue/current", (req,res) => {
 
   checkExpire();
 
-  if(currentData){
+  if(currentData){ // Still on the same track, keep showing this info
     return res.send(currentData);
   }
+
   if(!currentId){
     let d = {
       status: 404
@@ -186,19 +202,22 @@ app.get("/queue/next", (req,res) =>{
 
   checkExpire();
 
-  let id = queue[0] || null;
-  currentId = id;
+  let nextInQueue = queue[0] || null;
+  currentId = null;
   currentData = null;
   currentHumanQueue = null;
 
   let resp = {
     id : null,
-    status : 404
+    status : 404,
+    pushedBy: null
   }
 
-  if(id != null){
-    resp.id = id;
+  if(nextInQueue != null){
+    currentId = nextInQueue.id;
+    resp.id = currentId;
     resp.status = 200;
+    resp.pushedBy = nextInQueue.pusher;
     res.send(JSON.stringify(resp));
   }else{
     let recData = {
@@ -208,13 +227,16 @@ app.get("/queue/next", (req,res) =>{
     };
     spotify.getRecommendations(recData, (err,data) => {
       if(err){
+        console.error(err.statusCode);
         return null;
       }else{
         let tracks = data.body.tracks;
         let index = Math.floor(Math.random() * tracks.length);
         let t = tracks[index];
+        currentId = t.id;
         resp.id = t.id;
         resp.status = 201;
+        resp.pushedBy = -1;
         res.send(JSON.stringify(resp));
       }
     });
@@ -231,11 +253,19 @@ app.get("/queue/all", (req,res) => { // Simple queue getter
 });
 
 app.get("/queue/human", (req,res) => { // Get queue and all the image data too
+  if(currentHumanQueue){
+    res.send(currentHumanQueue);
+    return;
+  }
+
   let nq = [];
+  let pushers = [];
   for(let i = 0; i < queue.length; i++){
-    let uri = queue[i].split(":");
+    let current = queue[i];
+    let uri = current.id.split(":");
     let id = uri[uri.length-1];
     nq.push(id);
+    pushers.push([id, current.pusher || null]);
   }
 
   if(nq == []){
@@ -250,10 +280,22 @@ app.get("/queue/human", (req,res) => { // Get queue and all the image data too
         for(let l = 0; l < j.tracks.length; l++){
           let current = j.tracks[l];
           out.push({
+            id: current.id,
             name: current.name,
             artist: current.artists[0].name,
             img: current.album.images[2].url
           })
+        }
+
+        // Queue needs to know who pushed them
+        for(l = 0; l < out.length; l++){
+          for(let m = 0; m < pushers.length; m++){
+            if(out[l].id == pushers[m][0]){
+              out[l].pusher = pushers[m][1];
+              pushers.splice(m,1);
+              break;
+            }
+          }
         }
         currentHumanQueue = out;
         res.send(out);
@@ -262,26 +304,37 @@ app.get("/queue/human", (req,res) => { // Get queue and all the image data too
   }
 });
 
-app.get("/queue/push/:id", (req,res) =>{
-  let id = req.params.id;
-  queue.push(id);
-  console.log("Pushed to the queue: " + id);
+app.post("/queue/push", (req,res) =>{
+  let data = req.body;
+  queue.push(data);
+  console.log("Pushed to the queue: " + data.id);
+  currentHumanQueue = null;
   res.send("{error:null}");
+});
+
+app.post("/queue/remove", (req, res) => {
+  let data = req.body;
+  for(let i = 0; i < queue.length; i++){
+    if(queue[i].id == "spotify:track:"+data.id){
+      queue.splice(i,1);
+      currentHumanQueue = null;
+      break;
+    }
+  }
+  console.log("Spliced from the queue: " + data.id);
+  res.send("{error:null}");
+});
+
+
+app.post("/test", (req, res) => {
+  console.log(req.body.id);
+  res.send("Thanks!");
 });
 
 app.get("/queue/set/:id", (req,res) =>{
   let id = req.params.id;
   currentId = id;
   console.log("Connection with id: " + id);
-});
-
-app.get("/test/:id", (req,res) => {
-  let id = req.params.id;
-  if(id.indexOf(":") != -1){
-    let p = id.split(":")
-    id = p[p.length-1];
-  }
-  spotify.getAudioFeaturesForTrack()
 });
 
 app.get("/logout", (req,res) => {

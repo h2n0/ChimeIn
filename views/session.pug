@@ -7,15 +7,15 @@ block scripts
 
   if host
     script(src="https://sdk.scdn.co/spotify-player.js")
-  else
-    script(src="/scripts/guest.js")
 
-  script(src="/scripts/tabs.js")
+  script(src="/scripts/guest.js")
+  script(src="/scripts/modal.js")
+  script(src="/scripts/pageController.js")
 
 block content
   div
-    a(href="http://google.com", id="imageLink", target="_blank")
-      img(src="https://baconmockup.com/300/300", id="playing", style="display:block; margin: auto;")
+    a(href="https://open.spotify.com/", id="imageLink", target="_blank")
+      img(src="/assets/connect.png", id="playing", style="display:block; margin: auto;")
       p(style="text-align: center; font-size: 1.8em", id="NAT") Song name
 
   div.tabs
@@ -29,5 +29,5 @@ block content
 
   div.tabContainer.hidden(index=1)
     div
-      input(id="songSearch")
+      input(id="songSearch", placeholder="Song name")
       ul(id="q")

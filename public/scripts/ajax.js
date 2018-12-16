@@ -13,13 +13,13 @@ function get(url, callback) {
 function post(url, data, callback){
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      if(callback)callback(this.responseText)
+    if (this.readyState == 4) {
+      if(callback)callback(this.status != 200, this.responseText)
     }
   };
   xhttp.open("POST", url, true);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send(data);
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.send(JSON.stringify(data));
 }
 
 

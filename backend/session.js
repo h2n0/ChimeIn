@@ -17,11 +17,9 @@ class Session{
   }
 
   setExpire(newExpire){
-    let d = new Date().getTime();
-    let minutes = newExpire * 1000;
-    let newExp = d + minutes;
-    this.expire = new Date(newExp);
-    console.log(this.expire);
+    let d = new Date();
+    d.setSeconds(d.getSeconds() + parseInt(newExpire));
+    this.expire = d;
   }
 
 
