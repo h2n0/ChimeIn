@@ -8,9 +8,13 @@ let Session = require("./backend/session.js");
 let AutoTrack = require("./backend/autotrack.js");
 let ChimeResponse = require("./backend/response.js");
 let config = require("./backend/config.js");
+let ChimeSession = require("./backend/chimeSession.js");
 let spotify = new SpotifyWebApi(config);
 let request = require("request");
 let sessionHolder = null;
+
+let s = new ChimeSession("100");
+console.log(s);
 
 
 let queue = [];
