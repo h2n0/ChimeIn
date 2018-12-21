@@ -40,3 +40,37 @@ function playSong(token, songURI, callback){
   xhttp.setRequestHeader("Content-Type","application/json");
   xhttp.send(data);
 }
+
+function swapFromSpotToChime(token, deviceId, callback){
+  let xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 204) {
+      if(callback){
+        callback(null, this.responseText);
+      }
+    }
+  };
+  let url = "https://api.spotify.com/v1/me/player";
+  let data = JSON.stringify({"device_ids": [deviceId]});
+  xhttp.open("PUT", url, true);
+  xhttp.setRequestHeader("Accept", "application/json");
+  xhttp.setRequestHeader("Authorization","Bearer " + token);
+  xhttp.setRequestHeader("Content-Type","application/json");
+  xhttp.send(data);
+}
+
+function getCurretDeviceId(token, callback){
+  let xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      if(callback){
+        callback(null, this.responseText);
+      }
+    }
+  };
+  let url = "https://api.spotify.com/v1/me/player";
+  xhttp.open("GET", url, true);
+  xhttp.setRequestHeader("Accept", "application/json");
+  xhttp.setRequestHeader("Authorization","Bearer " + token);
+  xhttp.send();
+}

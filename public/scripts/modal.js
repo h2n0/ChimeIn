@@ -63,8 +63,7 @@ function showAddTrack(track, callback){
 }
 
 function showRemoveTrack(trackObj, callback){
-  console.log(trackObj);
-  get("/track/"+trackObj.id, (data) =>{
+  post("/search/track", trackObj, (err, data) =>{
     let track = JSON.parse(data).body;
     let content = document.createElement("div");
     let img = document.createElement("img");

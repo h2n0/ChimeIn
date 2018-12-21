@@ -1,7 +1,8 @@
 # Chimein todo
 - first song added isn't actually added [X]
 - recomendation 429 error code, too many requests [X]
-- Sort out real sessions [-]
+- Sort out real sessions [X]
+- Convert all get's to post's [X]
 
 
 ## Chimein maybes

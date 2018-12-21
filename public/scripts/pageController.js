@@ -1,3 +1,7 @@
+function getRoomCode(){
+  return document.getElementById("roomCode").innerHTML;
+}
+
 function openTab(index){
   tabContainers = document.getElementsByClassName("tabContainer");
   for(let i = 0; i < tabContainers.length; i++){
@@ -20,13 +24,41 @@ function openTab(index){
   }
 }
 
+function makePostObject(data){
+  let res = {
+    "room" : getRoomCode(),
+    "guid" : genID(),
+    "data": data || null
+  }
+
+  return res;
+}
+
+function giveSpotLife(spot, track){
+  spot.onclick = (e) => {
+    showRemoveTrack(makePostObject(track), (removed) => {
+      if(removed){
+        let id = track.id;
+
+        let obj = {
+          "id":id
+        }
+        
+        post("/queue/remove", makePostObject(obj), (e,d) => {
+          updateQueue();
+        });
+      }
+    });
+  };
+}
+
 function updateQueue(guid){
   let q = document.getElementById("queue");
   let hq = document.getElementById("qHead");
 
-  get("/queue/human", (tracks) => {
+  post("/queue/human", makePostObject(), (err, tracks) => {
     tracks = JSON.parse(tracks);
-    let numTracks = tracks.length;
+    let numTracks = tracks != null ? tracks.length : 0;
     let qc = q.childNodes.length;
     let children = q.childNodes;
 
@@ -44,21 +76,13 @@ function updateQueue(guid){
           }
         }else{ // If not make sure it does
           if(track.pusher ==  guid){
-            li.appendChild(spot);
-            spot.onclick = (e) => {
-              showRemoveTrack(track, (removed) => {
-                if(removed){
-                  let id = track.id;
-
-                  let obj = {
-                    "id":id
-                  }
-                  post("/queue/remove", obj, (e,d) => {
-                    updateQueue();
-                  });
-                }
-              });
-            };
+            let spot = document.createElement("div");
+            spot.classList.add("spot");
+            let x = document.createElement("p");
+            x.innerHTML = "&times";
+            spot.appendChild(x);
+            currentQueuePos.appendChild(spot);
+            giveSpotLife(spot, track);
           }
         }
 
@@ -94,20 +118,7 @@ function updateQueue(guid){
 
         if(track.pusher ==  guid){
           li.appendChild(spot);
-          spot.onclick = (e) => {
-            showRemoveTrack(track, (removed) => {
-              if(removed){
-                let id = track.id;
-
-                let obj = {
-                  "id":id
-                }
-                post("/queue/remove", obj, (e,d) => {
-                  updateQueue();
-                });
-              }
-            });
-          };
+          giveSpotLife(spot, track);
         }
 
         q.appendChild(li);
@@ -117,14 +128,17 @@ function updateQueue(guid){
     if(tracks){
       hq.innerHTML = "Queue (" + numTracks + ")";
     }else{
-      hq.innerHTML = "Queue";
+      hq.innerHTML = "Queue (0)";
     }
   });
 }
 
 function setCurrentInfo(){
-  get("/queue/current", (data) => {
+
+  post("/queue/current", makePostObject(), (err, data) => {
+    if(err)return;
     let j = JSON.parse(data);
+    if(j == null)return;
     if(j.status == 404){
 
     }else{
@@ -168,11 +182,10 @@ function populateSearchList(list, guid, tracks){
           let uri = track.uri;
 
           let obj = {
-            "pusher" : guid,
-            "id" : uri
+            "id" : uri,
           }
 
-          post("/queue/push", obj, (err, data) => {
+          post("/queue/push", makePostObject(obj), (err, data) => {
             if(err){
               console.error("Something has gone wrong while queueing a song");
             }else{
@@ -180,13 +193,6 @@ function populateSearchList(list, guid, tracks){
               updateQueue(guid);
             }
           });
-
-          /**
-          get("/queue/push/"+track.uri, (data) => {
-            console.log("Added song to queue!");
-            updateQueue();
-          });
-          **/
         }
       });
     }
@@ -210,7 +216,7 @@ window.onload = function(){
       "query" : v
     }
 
-    post("/search", data, (err, d) =>{
+    post("/search", makePostObject(data), (err, d) =>{
       if(err){
         console.error("Error while searching");
         console.group("Chime In");
@@ -238,4 +244,12 @@ window.onload = function(){
 
   // WINDOW load
   autoCheck(guid);
+}
+
+
+window.onbeforeunload = function(){
+  let obj = {
+    "event": "leaving"
+  }
+  post("/test", makePostObject(obj));
 }

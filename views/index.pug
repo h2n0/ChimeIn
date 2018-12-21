@@ -1,15 +1,28 @@
 extends base.pug
 
 
+block scripts
+  script(src="/scripts/ajax.js")
+  script(src="/scripts/valid.js")
+  script(src="/scripts/cookies.js")
+  script(src="/scripts/joinPage.js")
+
 
 block content
-  unless user
-    h2 You need to login
-    a(href="/login") Login
-  else
-    h2 Logged in as #{user}
-    p You can go to the 
-      a(href="/session") Session
 
-    a(href="/logout")
-      h3 Logout
+  input(name="id", id="sessionId", required, autocomplete="off", placeholder="123-456-789").sessionID
+
+  div.partyOptions
+    a(id="create", style="cursor:pointer;")
+      div.option
+        if user
+          if canHost
+            p Host
+          else
+            p Need to have premium to host
+        else
+          p Sign in to Spotify to host
+
+    a(id="join",style="cursor:pointer;")
+      div.option
+        p Join

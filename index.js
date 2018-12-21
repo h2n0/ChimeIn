@@ -4,25 +4,12 @@ let port = 8888;
 let cookie = require("cookie-parser");
 let SpotifyWebApi = require('spotify-web-api-node');
 let bodyParser = require("body-parser");
-let Session = require("./backend/session.js");
-let AutoTrack = require("./backend/autotrack.js");
-let ChimeResponse = require("./backend/response.js");
 let config = require("./backend/config.js");
 let ChimeSession = require("./backend/chimeSession.js");
 let spotify = new SpotifyWebApi(config);
 let request = require("request");
-let sessionHolder = null;
-
-let s = new ChimeSession("100");
-console.log(s);
-
-
-let queue = [];
-let currentId = null;
-let currentData = null;
-let currentHumanQueue = [];
-let currentSession = new Session();
-let recc = new AutoTrack();
+let currentSession = null;
+let sessions = [];
 
 app.set('view engine', 'pug');
 app.use(express.static('public'));
@@ -31,9 +18,9 @@ app.use(bodyParser.json());
 
 
 function checkExpire(){
-  if(sessionHolder){
-    if(sessionHolder.hasExpired()){
-      console.log("Refreshing tokens!")
+  if(currentSession){
+    if(currentSession.sessionHandler.hasExpired()){
+      console.log("Refreshing tokens for session #"+currentSession.id);
       spotify.refreshAccessToken( (err, data) =>{
         if(err){
           console.log("oh no");
@@ -41,24 +28,74 @@ function checkExpire(){
         }else{
           let token = data.body.access_token;
           let expire = data.body.expires_in;
-          sessionHolder.renewTokens(token, expire);
-          spotify.setAccessToken(token);
+          currentSession.sessionHandler.renewTokens(token, expire);
+          currentSession.changeToThisSession(spotify);
         }
       });
     }
   }
 }
 
+function changeToRoom(id){
+  if(currentSession){
+    if(currentSession.id == id)return true;
+  }
+  let room = sessions[""+id];
+  if(room){
+    room.changeToThisSession(spotify);
+    currentSession = room;
+    return true;
+  }else{
+    console.log("No such room as #"+id);
+    return false;
+  }
+}
+
+function genId(){
+  let id = "";
+  for(let i = 0; i < 9; i++){
+    id = id + Math.round((Math.random() * 9));
+  }
+  return id;
+}
+
+function sendNull(res){
+  res.send(JSON.stringify(null));
+}
+
 app.get("/", (req, res) => {
-  res.render("index", {user: req.cookies.spotName});
+  res.render("index", {user: req.cookies.spotName, canHost: req.cookies.spotPremium});
 });
 
 app.get("/about", (req, res) =>{
   res.render("about");
 });
 
+
+app.get("/newSession", (req, res) => {
+  let id = genId();
+
+  // Make sure we get an empty room
+  while(sessions[""+id]){
+    id = genId();
+  }
+
+  let ns = new ChimeSession(id);
+  sessions[""+id] = ns;
+  currentSession = ns;
+  res.send(id);
+});
+
+
+app.get("/isSession/:id", (req, res) => {
+  let id = req.params.id;
+  let sesh = sessions[""+id];
+  let free = sesh != undefined && sesh.isActive();
+  res.send(free);
+});
+
 app.get("/login", (req, res) => {
-  let scopes = "streaming user-read-birthdate user-read-private user-read-email user-modify-playback-state";
+  let scopes = "streaming user-read-playback-state user-read-birthdate user-read-private user-read-email user-modify-playback-state";
   let redirectUri = config.redirectUri;
   let clientId = config.clientId;
   let url = "https://accounts.spotify.com/authorize?response_type=code" + "&client_id=" + clientId + (scopes ? "&scope=" + encodeURIComponent(scopes) : '') + "&redirect_uri=" + encodeURIComponent(redirectUri);
@@ -74,16 +111,18 @@ app.get("/auth", (req,res) => {
       let expire = data.body["expires_in"];
       let refresh = data.body["refresh_token"];
 
-      sessionHolder = new Session();
-      sessionHolder.setTokens(token, expire, refresh);
+      sessionHolder = new ChimeSession();
+      cSession = new ChimeSession("100");
+      cSession.sessionHandler.setTokens(token, expire, refresh);
+      cSession.changeToThisSession(spotify);
 
       res.cookie("spotID", token);
-      spotify.setAccessToken(token);
-      spotify.setRefreshToken(refresh);
       spotify.getMe( (err, data) => {
         name = data.body["display_name"];
+        premium = data.body["product"] == "premium";
+        res.cookie("spotPremium", premium);
         res.cookie("spotName", name);
-        res.redirect("/session");
+        res.redirect("/");
       });
     }
   });
@@ -99,156 +138,95 @@ app.get("/host", (req, res) => {
   res.redirect("/login");
 });
 
-app.get("/session", (req, res) => {
-  res.render("session", {host: req.cookies.sessionHost || false});
-});
-
-
-app.get("/track/:id", (req, res) => {
-  spotify.getTrack(req.params.id).then( (data) =>{
-    res.send(data);
-  }, (err) =>{
-    console.error(err);
-    res.send("Error!");
-  });
+app.get("/session/:id", (req, res) => {
+  let id = req.params.id;
+  res.render("session", {host: req.cookies.sessionHost || false, id:id});
 });
 
 app.post("/search", (req, res) => {
 
-  checkExpire();
+  let data = req.body;
 
-  let d = req.body.query.trim();
-  let songReg = new RegExp("\/track\/([0-9A-Za-z]*)");
-  let reg = d.match(songReg);
+  if(changeToRoom(data.room)){
+    let d = data.data.query.trim();
+    let songReg = new RegExp("\/track\/([0-9A-Za-z]*)");
+    let reg = d.match(songReg);
 
-  if(d.indexOf(":") != -1 || reg){ // Spotify URI
-                            // It's a very specific search
-    if(!reg){
-      let p = d.split(":");
-      d = p[p.length-1];
+    if(d.indexOf(":") != -1 || reg){ // Spotify URI
+                                     // It's a very specific search
+      if(!reg){
+        let p = d.split(":");
+        d = p[p.length-1];
+      }else{
+        d = reg[1];
+      }
+      d = d.trim();
+      spotify.getTrack(d, (err,data) => {
+        if(err){
+          console.error(err);
+        }else{
+          res.send(data);
+        }
+      });
     }else{
-      d = reg[1];
-    }
-    d = d.trim();
-    spotify.getTrack(d, (err,data) => {
-      if(err){
-        console.error(err);
-      }else{
-        res.send(data);
-      }
-    });
-  }else{
-    spotify.searchTracks(d, {limit:5}, (err, data) => {
-      if(err){
-        console.error("Looking for a song failed!")
-        console.error(err);
-        res.send(JSON.stringify({error:err}))
-      }else{
-        res.send(data);
-      }
-    });
-  }
-});
-
-app.get("/queue/current", (req,res) => {
-
-  checkExpire();
-
-  if(currentData){ // Still on the same track, keep showing this info
-    return res.send(currentData);
-  }
-
-  if(!currentId){
-    let d = {
-      status: 404
-    }
-    res.send(JSON.stringify(d));
-  }else{
-    let id = currentId.split(":");
-    id = id[id.length-1];
-    recc.addElement(id);
-    spotify.getTrack(id, (err,data) =>{
-      if(err) {
-        let d = {
-          status: 404
+      spotify.searchTracks(d, {limit:5}, (err, data) => {
+        if(err){
+          console.error("Looking for a song failed!")
+          console.error(err);
+          res.send(JSON.stringify({error:err}))
+        }else{
+          res.send(data);
         }
-        res.send(JSON.stringify(d));
-      } else {
-        let body = data.body;
-        let name = body.name;
-        let uri = body.uri;
-
-        let d = {
-          id: body.id,
-          name: name,
-          uri: uri,
-          artist: { name:body.artists[0].name, id: body.artists[0].id},
-          images: [
-            body.album.images[0].url,
-            body.album.images[1].url,
-            body.album.images[2].url
-          ],
-          next: body.duration_ms,
-          started: Date.now(),
-          link: body["external_urls"]["spotify"],
-          status: 200
-        }
-
-        currentData = d;
-        res.send(d);
-      }
-    });
-  }
-});
-
-
-app.get("/queue/next", (req,res) =>{
-
-  checkExpire();
-
-  let nextInQueue = queue[0] || null;
-  currentId = null;
-  currentData = null;
-  currentHumanQueue = null;
-
-  let resp = {
-    id : null,
-    status : 404,
-    pushedBy: null
-  }
-
-  if(nextInQueue != null){
-    currentId = nextInQueue.id;
-    resp.id = currentId;
-    resp.status = 200;
-    resp.pushedBy = nextInQueue.pusher;
-    res.send(JSON.stringify(resp));
+      });
+    }
   }else{
-    let recData = {
-      min_energy: 0.4,
-      seed_tracks: recc.getQueue(),
-      min_populatiry: 50
-    };
-    spotify.getRecommendations(recData, (err,data) => {
-      if(err){
-        console.error(err.statusCode);
-        return null;
-      }else{
-        let tracks = data.body.tracks;
-        let index = Math.floor(Math.random() * tracks.length);
-        let t = tracks[index];
-        currentId = t.id;
-        resp.id = t.id;
-        resp.status = 201;
-        resp.pushedBy = -1;
-        res.send(JSON.stringify(resp));
-      }
-    });
+    sendNull(res);
   }
 });
 
-app.get("/queue/pop", (req, res) => { // Remove song from front of queue
-  queue.shift()
+app.post("/search/track", (req, res) => {
+  let body = req.body;
+  if(changeToRoom(body.room)){
+    spotify.getTrack(body.data.id, (err, data) => {
+      res.send(JSON.stringify(data));
+    });
+  }else{
+    sendNull(res);
+  }
+});
+
+app.post("/queue/current", (req,res) => {
+  let body = req.body;
+  if(changeToRoom(body.room)){
+    currentSession.getCurrentSong(spotify, (data) => {
+      try{
+        res.send(JSON.stringify(data));
+      }catch(e){
+        // BS error
+      }
+    });
+  }else {
+    sendNull(res);
+  }
+});
+
+
+app.post("/queue/next", (req,res) =>{
+  let body = req.body;
+  if(changeToRoom(body.room)){
+    currentSession.getNextSong(spotify, (data) =>{
+      res.send(JSON.stringify(data));
+    });
+  }else{
+    sendNull(res);
+  }
+});
+
+app.post("/queue/pop", (req, res) => { // Remove song from front of queue
+  let data = req.body;
+  if(changeToRoom(data.room)){
+    currentSession.popFromQueue();
+  }
   res.send("done")
 });
 
@@ -256,89 +234,62 @@ app.get("/queue/all", (req,res) => { // Simple queue getter
   res.send(JSON.stringify(queue || null));
 });
 
-app.get("/queue/human", (req,res) => { // Get queue and all the image data too
-  if(currentHumanQueue){
-    res.send(currentHumanQueue);
-    return;
-  }
-
-  let nq = [];
-  let pushers = [];
-  for(let i = 0; i < queue.length; i++){
-    let current = queue[i];
-    let uri = current.id.split(":");
-    let id = uri[uri.length-1];
-    nq.push(id);
-    pushers.push([id, current.pusher || null]);
-  }
-
-  if(nq == []){
-    res.send([]);
-  }else{
-    spotify.getTracks(nq, (err,data) => {
-      if(!data){
-        res.send([]);
-      }else{
-        let j = data.body;
-        let out = [];
-        for(let l = 0; l < j.tracks.length; l++){
-          let current = j.tracks[l];
-          out.push({
-            id: current.id,
-            name: current.name,
-            artist: current.artists[0].name,
-            img: current.album.images[2].url
-          })
-        }
-
-        // Queue needs to know who pushed them
-        for(l = 0; l < out.length; l++){
-          for(let m = 0; m < pushers.length; m++){
-            if(out[l].id == pushers[m][0]){
-              out[l].pusher = pushers[m][1];
-              pushers.splice(m,1);
-              break;
-            }
-          }
-        }
-        currentHumanQueue = out;
-        res.send(out);
-      }
+// Get the queue and all the image data too
+app.post("/queue/human", (req, res) => {
+  let data = req.body;
+  let roomId = data.room;
+  if(changeToRoom(roomId)){
+    currentSession.getHumanQueue(spotify, (data) => {
+      res.send(JSON.stringify(data));
     });
+  }else{
+    sendNull(res);
   }
 });
 
 app.post("/queue/push", (req,res) =>{
   let data = req.body;
-  queue.push(data);
-  console.log("Pushed to the queue: " + data.id);
-  currentHumanQueue = null;
-  res.send("{error:null}");
+  let roomId = data.room;
+  if(changeToRoom(roomId)){
+    let songObj = {
+      "id" : data.data.id,
+      "pusher" : data.guid
+    }
+    currentSession.pushToQueue(songObj);
+    sendNull(res);
+  }else{
+    sendNull(res);
+  }
 });
 
 app.post("/queue/remove", (req, res) => {
-  let data = req.body;
-  for(let i = 0; i < queue.length; i++){
-    if(queue[i].id == "spotify:track:"+data.id){
-      queue.splice(i,1);
-      currentHumanQueue = null;
-      break;
-    }
+  let body = req.body;
+  let roomId = body.room;
+  if(changeToRoom(roomId)){
+    currentSession.removeFromQueue(body.data.id);
+    res.status(200);
+    sendNull(res);
+  }else{
+    res.status(400);
+    sendNull(res);
   }
-  console.log("Spliced from the queue: " + data.id);
-  res.send("{error:null}");
 });
 
+app.post("/queue/set", (req,res) => {
+  let data = req.body;
+  if(changeToRoom(data.room)){
+    currentSession.setCurrentSong(data.id);
+  }
+  sendNull(res);
+});
+
+app.post("/session/data", (req,res) => {
+  let data = res.body;
+});
 
 app.post("/test", (req, res) => {
-  console.log(req.body.id);
-  res.send("Thanks!");
-});
-
-app.get("/queue/set/:id", (req,res) =>{
-  let id = req.params.id;
-  currentId = id;
-  console.log("Connection with id: " + id);
+  console.log(req.body);
+  res.status(200).end();
 });
 
 app.get("/logout", (req,res) => {
