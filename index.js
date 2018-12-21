@@ -90,7 +90,7 @@ app.get("/newSession", (req, res) => {
 app.get("/isSession/:id", (req, res) => {
   let id = req.params.id;
   let sesh = sessions[""+id];
-  let free = sesh != undefined && sesh.isActive();
+  let free = sesh != undefined;
   res.send(free);
 });
 
