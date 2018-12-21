@@ -25,6 +25,7 @@ window.onload = function(){
     let id = document.getElementById("sessionId").value.trim();
     if(id == "" || id.length < 8)return;
     get("/isSession/"+id, (data) => {
+      console.log(data);
       if(data == "false"){
         alert("No room with that name");
       }else{
