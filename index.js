@@ -38,12 +38,16 @@ function checkExpire(){
 
 function changeToRoom(id){
   if(currentSession){
-    if(currentSession.id == id)return true;
+    if(currentSession.id == id){
+      checkExpire();
+      return true;
+    }
   }
   let room = sessions[""+id];
   if(room){
     room.changeToThisSession(spotify);
     currentSession = room;
+    checkExpire();
     return true;
   }else{
     console.log("No such room as #"+id);
