@@ -2,6 +2,7 @@ window.onload = function(){
 
   let join = document.getElementById("join");
   let host = document.getElementById("create");
+  let idContainer = document.getElementById("sessionId");
 
   let text = host.children[0].children[0].innerHTML;
   if(text == "Sign in to Spotify to host"){
@@ -22,16 +23,25 @@ window.onload = function(){
 
 
   join.onclick = (e) => {
-    let id = document.getElementById("sessionId").value.trim();
-    if(id == "" || id.length < 8)return;
-    get("/isSession/"+id, (data) => {
-      console.log(data);
-      if(data == "false"){
-        alert("No room with that name");
-      }else{
-        let newUrl = "/session/"+id;
-        document.location.href = newUrl;
-      }
-    });
+    joinSession(idContainer.value.trim());
   }
+
+  idContainer.onkeydown = (e) => {
+    if(e.keyCode != 13)return;
+    joinSession(idContainer.value.trim());
+  }
+}
+
+
+function joinSession(id){
+  if(id == "" || id.length < 8)return;
+  get("/isSession/"+id, (data) => {
+    console.log(data);
+    if(data == "false"){
+      alert("No room with that name");
+    }else{
+      let newUrl = "/session/"+id;
+      document.location.href = newUrl;
+    }
+  });
 }
