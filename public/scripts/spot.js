@@ -55,7 +55,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
   player.addListener('authentication_error', ({ message }) => {
     console.log("Authentication failed, need to sign in first")
-    get("/auth/refresh");
+    post("/auth/refresh", makePostObject());
   });
 
   // Playback status updates
@@ -81,8 +81,6 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
       console.log("Setting sesison to be active!");
       console.log("Set current: " + uri);
-
-      console.log(state);
     }
 
     lconnected = connected;
@@ -111,32 +109,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   // Ready
   player.addListener('ready', ({ device_id }) => {
     console.log('Ready with Device ID', device_id);
-
-    let code = getRoomCode();
-    let realCode = code.substring(0,3) + "-" + code.substring(3,6) + "-" + code.substring(6,9);
-    player.setName("Chime In: " + realCode);
-
-    let did = -1;
-    getCurretDeviceId(token, (err, data) => {
-
-      if(data){
-        data = JSON.parse(data);
-      }else{
-        return;
-      }
-
-      console.log("Now to swap");
-      swapFromSpotToChime(token, device_id, () => {
-        console.log("We're auto playing now!");
-
-        // Need to convert back to a percentage
-        let vol = data.device.volume_percent / 100;
-
-        player.setVolume(vol).then(() => {
-          console.log('Volume updated!');
-        });
-      });
-    });
+    player.setName("Chime In: " + getHumanRoomCode());
   });
 
   // Not Ready

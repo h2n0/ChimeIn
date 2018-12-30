@@ -5,7 +5,7 @@ block scripts
   script(src="/scripts/ajax.js")
   script(src="/scripts/valid.js")
   script(src="/scripts/cookies.js")
-  script(src="/scripts/joinPage.js")
+  script(src="/scripts/min/joinPage.min.js")
 
 
 block content
@@ -14,7 +14,7 @@ block content
 
   div.partyOptions
     a(id="create", style="cursor:pointer;")
-      div.option
+      div.option(style="background-color:#1DB954;")
         if user
           if canHost
             p Host

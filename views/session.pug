@@ -1,21 +1,23 @@
 extends base
 
 block scripts
-  script(src="/scripts/cookies.js")
-  script(src="/scripts/ajax.js")
+  script(src="/scripts/min/cookies.min.js")
+  script(src="/scripts/min/ajax.min.js")
 
-  script(src="/scripts/guest.js")
-  script(src="/scripts/modal.js")
-  script(src="/scripts/pageController.js")
+  script(src="/scripts/min/guest.min.js")
+  script(src="/scripts/min/modal.min.js")
+  script(src="/scripts/min/pageController.min.js")
 
 
-  script(src="/scripts/spot.js")
+  script(src="/scripts/min/spot.min.js")
 
   if host
     script(src="https://sdk.scdn.co/spotify-player.js")
+    script(src="/scripts/min/tutorial.min.js")
 
 block content
   span(id="roomCode", style="display:none;")= id
+  h2(style="display:none;") #CODE
   div
     a(href="https://open.spotify.com/", id="imageLink", target="_blank")
       img(src="/assets/connect.png", id="playing", style="display:block; margin: auto;")

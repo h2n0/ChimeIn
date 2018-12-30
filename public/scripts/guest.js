@@ -14,7 +14,7 @@ function genID(){
   guid += screen.pixelDepth || "";
   guid += screen.colorDepth || "";
 
-  return guid;
+  return btoa(parseInt(guid).toString(16));
 }
 
 

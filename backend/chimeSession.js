@@ -2,17 +2,23 @@ const AutoTrack = require("./autotrack.js");
 const Session = require("./session.js");
 const ChimeResponse = require("./response.js");
 
+
+// First song to ever be played over the internet
+// https://open.spotify.com/track/44AyOl4qVkzS48vBsbNXaC?si=NUFHmJvuTM6hEmKJKg9yDw
+
 class ChimeSession{
 
   constructor(id){
     this.id = id;
     this.reccs = new AutoTrack();
+    this.users = [];
     this.queue = [];
     this.currentId = null;
     this.currentData = null;
     this.currentHumanQueue = null;
     this.sessionHandler = new Session();
     this.isActive = false;
+    this.songsPlayed = 0;
   }
 
   changeToThisSession(spotify){
@@ -26,6 +32,7 @@ class ChimeSession{
   }
 
   popFromQueue(){
+    this.songsPlayed++;
     this.queue.shift();
     this.currentHumanQueue = null;
     this.currentData = null;
@@ -197,6 +204,32 @@ class ChimeSession{
 
   isActive(){
     return this.active;
+  }
+
+  handleEvent(body){
+    let user = body.guid;
+
+    let event = body.data.event;
+
+    if(event == "leaving"){ // User left session
+      for(let i = 0; i < this.users.length; i++){
+        if(this.users[i] == user){
+          this.users.splice(i,1);
+        }
+
+        for(let j = 0; j < this.queue.length;){
+          let c = this.queue[j];
+
+          if(c.pusher == user){
+            this.queue.splice(j, 1);
+          }else{
+            j++;
+          }
+        }
+      }
+    }else if(event == "joining"){ // User joined session
+      this.users.push(user);
+    }
   }
 
 }

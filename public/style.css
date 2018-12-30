@@ -1,10 +1,28 @@
+
+/* Used for house keeping */
+:root{
+  --main-bg-color: #02182E;
+  --main-accent-color : #ECB613;
+
+
+  --modal-padding: 2%;
+  --modal-vertical: calc((50% - 170px) / 3);
+}
+
+
+
 body{
-  background-color: #02182E;
+  background-color: var(--main-bg-color);
   color: white;
   font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;
   font-size: 62.5%;
 }
 
+
+
+a{
+  color: var(--main-accent-color);
+}
 
 a.title{
   text-decoration: none;
@@ -199,6 +217,7 @@ img.logo{
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
+  overflow-y: hidden;
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
@@ -208,11 +227,17 @@ img.logo{
 .modalContent {
   color: black;
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
+  margin: var(--modal-vertical) auto; /* 15% from the top and centered */
   width: 300px; /* Could be more or less, depending on screen size */
-  padding: 3%;
+  padding: var(--modal-padding);
+  padding-bottom: calc(71px + var(--modal-padding)); /* 71px for height of buttons */
+  border-radius: 15px;
+  transition: all 0.5s ease-in-out;
 }
 
+.modal:target {
+  background-color: #FF00FF;
+}
 
 input[type='number'] {
     -moz-appearance:textfield;
@@ -228,10 +253,17 @@ input[type=number]::-webkit-outer-spin-button {
 div.indexOption{
   width: 100px;
   height: 50px;
-  
+
 }
 
 @media only screen and (max-width: 600px) {
+
+    /* Used for house keeping */
+    :root{
+      --main-bg-color: #02182E;
+      --modal-padding: 3%;
+      --modal-vertical: 25%;
+    }
 
     body{
       margin: 0;
@@ -256,10 +288,6 @@ div.indexOption{
 
     ul#q li{
       width: 100%;
-    }
-
-    a{
-      color: #ECB613;
     }
 
     img.logo{

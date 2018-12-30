@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "clear && node index.js"
+    "start": "clear && node index.js",
+    "build": "./tools/./compress.sh"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "mysql": "^2.16.0",
     "pug": "^2.0.3",
     "request": "^2.88.0",
-    "spotify-web-api-node": "^4.0.0"
+    "spotify-web-api-node": "^4.0.0",
+    "uglify-js": "^3.4.9"
   }
 }

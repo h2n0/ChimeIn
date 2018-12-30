@@ -2,6 +2,12 @@ function getRoomCode(){
   return document.getElementById("roomCode").innerHTML;
 }
 
+function getHumanRoomCode(){
+  let code = getRoomCode();
+  let realCode = code.substring(0,3) + "-" + code.substring(3,6) + "-" + code.substring(6,9);
+  return realCode;
+}
+
 function openTab(index){
   tabContainers = document.getElementsByClassName("tabContainer");
   for(let i = 0; i < tabContainers.length; i++){
@@ -43,7 +49,7 @@ function giveSpotLife(spot, track){
         let obj = {
           "id":id
         }
-        
+
         post("/queue/remove", makePostObject(obj), (e,d) => {
           updateQueue();
         });

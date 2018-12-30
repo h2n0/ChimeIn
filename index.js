@@ -8,28 +8,45 @@ let config = require("./backend/config.js");
 let ChimeSession = require("./backend/chimeSession.js");
 let spotify = new SpotifyWebApi(config);
 let request = require("request");
+let mysql = require("mysql");
+let db = mysql.createConnection(config.sql);
 let currentSession = null;
 let sessions = [];
+let sessionIds = [];
 
 app.set('view engine', 'pug');
 app.use(express.static('public'));
 app.use(cookie());
 app.use(bodyParser.json());
 
+db.connect();
+
+
+db.query("SELECT * FROM users", (err, rows, fields) => {
+  if(err){
+    console.log(err);
+  }else{
+    console.log(Object.keys(rows[0]));
+  }
+});
+
 
 function checkExpire(){
   if(currentSession){
-    if(currentSession.sessionHandler.hasExpired()){
+    let handler = currentSession.sessionHandler;
+    if(handler.hasExpired() && !handler.waitingForTokens){
       console.log("Refreshing tokens for session #"+currentSession.id);
+      handler.waitingForTokens = true;
       spotify.refreshAccessToken( (err, data) =>{
         if(err){
           console.log("oh no");
-          console.error(err);
+          console.error(err.message);
         }else{
+          console.log(data);
           let token = data.body.access_token;
           let expire = data.body.expires_in;
-          currentSession.sessionHandler.renewTokens(token, expire);
-          currentSession.changeToThisSession(spotify);
+          handler.renewTokens(token, expire);
+          handler.waitingForTokens = false;
         }
       });
     }
@@ -87,6 +104,8 @@ app.get("/newSession", (req, res) => {
   let ns = new ChimeSession(id);
   sessions[""+id] = ns;
   currentSession = ns;
+
+  sessionIds.push(id);
   res.send(id);
 });
 
@@ -115,26 +134,32 @@ app.get("/auth", (req,res) => {
       let expire = data.body["expires_in"];
       let refresh = data.body["refresh_token"];
 
-      sessionHolder = new ChimeSession();
-      cSession = new ChimeSession("100");
-      cSession.sessionHandler.setTokens(token, expire, refresh);
-      cSession.changeToThisSession(spotify);
+      spotify.setAccessToken(token);
+      spotify.setRefreshToken(refresh);
 
       res.cookie("spotID", token);
       spotify.getMe( (err, data) => {
-        name = data.body["display_name"];
-        premium = data.body["product"] == "premium";
-        res.cookie("spotPremium", premium);
-        res.cookie("spotName", name);
-        res.redirect("/");
+        if(err){
+          console.error(err);
+          res.redirect("/");
+        }else{
+          name = data.body["display_name"];
+          premium = data.body["product"] == "premium";
+          res.cookie("spotPremium", ""+premium);
+          res.cookie("spotName", ""+name);
+          res.redirect("/");
+        }
       });
     }
   });
 });
 
-app.get("/auth/refresh", (req, res) => {
-  checkExpire();
-  res.status(200).end();
+app.post("/auth/refresh", (req, res) => {
+  let data = req.body;
+  if(changeToRoom(data.room)){
+
+  }
+  sendNull(res);
 });
 
 app.get("/host", (req, res) => {
@@ -289,6 +314,13 @@ app.post("/queue/set", (req,res) => {
 
 app.post("/session/data", (req,res) => {
   let data = res.body;
+
+  if(changeToRoom(data.room)){
+    currentSession.handleEvent(data);
+  }else{
+    sendNull(res);
+  }
+
 });
 
 app.post("/test", (req, res) => {
@@ -296,10 +328,33 @@ app.post("/test", (req, res) => {
   res.status(200).end();
 });
 
+app.get("/secret/all", (req, res) => {
+  let out = "";
+  let numSessions = sessionIds.length;
+
+
+  out = "Num sessions: " + numSessions;
+
+  let avg = 0;
+  for(let i = 0; i < sessionIds.length; i++){
+    let sid = sessionIds[i];
+    if(changeToRoom(sid)){
+      avg += currentSession.songsPlayed;
+    }
+  }
+  avg = avg / numSessions;
+  out += "\n"
+  out += "Avg songs played: " + avg + "\n";
+  res.send(out);
+
+
+});
+
 app.get("/logout", (req,res) => {
   res.clearCookie("spotName");
-  res.clearCookie("spotId");
+  res.clearCookie("spotID");
   res.clearCookie("sessionHost");
+  res.clearCookie("spotPremium");
   res.redirect("/");
 });
 

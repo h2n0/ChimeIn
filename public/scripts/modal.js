@@ -1,12 +1,21 @@
-box = null;
+let box = null;
 
-function showBox(title, content){
+let acceptColor = "#9F9";
+let declineColor = "#F99";
+
+function showBox(content, options){
   if(!content)return;
+
+
+  let blurClose = true;
+  if(options){
+    if(options.blurClose != undefined){
+      blurClose = options.blurClose;
+    }
+  }
+
   let b = document.createElement("div");
   b.classList.add("modal");
-
-  let t = document.createElement("h1");
-  t.innerHTML = title || "Chime in";
 
   let all = document.createElement("div");
   all.appendChild(content);
@@ -17,12 +26,27 @@ function showBox(title, content){
   document.body.appendChild(b);
   b.style.display = "block";
   box = b;
+  popin();
 
   window.onclick = (e) => {
-    if(e.target == box){
+    if(e.target == box && blurClose){
       closeBox();
     }
   };
+}
+
+function popin(){
+  box.children[0].style = "transform: scale(0, 0);";
+  setTimeout( () => {
+    box.children[0].style = "transform: scale(1, 1);";
+  }, 50);
+}
+
+function popout(){
+  box.children[0].style = "transform: scale(1, 1);";
+  setTimeout( ()=>{
+    box.children[0].style = "transform: scale(0, 0);";
+  }, 10);
 }
 
 function showAddTrack(track, callback){
@@ -33,12 +57,13 @@ function showAddTrack(track, callback){
 
   let name = document.createElement("h2");
   name.style = "text-align: center;";
-  name.innerHTML = track.name + " by " + track.artists[0].name;
+  name.innerHTML = track.name + "<br>" + track.artists[0].name;
 
   let addBtn = document.createElement("div");
   addBtn.innerHTML = "Add to queue";
 
-  let sharedStyle = "width: 50%; text-align: center; cursor: pointer; padding-top: 10%; padding-bottom: 10%;";
+  let sharedStyle = "width: 50%; text-align: center; cursor: pointer;"
+  sharedStyle = sharedStyle + "padding-top: 10%; padding-bottom: 10%;";
   addBtn.style = "float: left;" + sharedStyle + "background-color: #9F9;";
 
   addBtn.onclick = (e) => {
@@ -48,7 +73,8 @@ function showAddTrack(track, callback){
 
   let canBtn = document.createElement("div");
   canBtn.innerHTML = "Cancel";
-  canBtn.style = "float: right;" + sharedStyle + "background-color: #F99;";
+  //canBtn.style = "float: right;" + sharedStyle + "background-color: " + declineColor + ";";
+  canBtn.style = "float: right; {} background-color: {};".format(sharedStyle, declineColor);
   canBtn.onclick = (e) => {
     if(callback)callback(false);
     closeBox();
@@ -59,7 +85,7 @@ function showAddTrack(track, callback){
   content.appendChild(canBtn);
   content.appendChild(addBtn);
 
-  showBox("ChimeIn", content);
+  showBox(content);
 }
 
 function showRemoveTrack(trackObj, callback){
@@ -77,7 +103,8 @@ function showRemoveTrack(trackObj, callback){
     let addBtn = document.createElement("div");
     addBtn.innerHTML = "Remove from queue";
 
-    let sharedStyle = "width: 50%; text-align: center; cursor: pointer; padding-top: 10%; padding-bottom: 10%;";
+    let sharedStyle = "width: 50%; height: 70px; text-align: center; cursor: pointer;"
+    sharedStyle = sharedStyle + "padding-top: 10%; padding-bottom: 10%;";
     addBtn.style = "float: left;" + sharedStyle + "background-color: #9F9;";
 
     addBtn.onclick = (e) => {
@@ -98,11 +125,47 @@ function showRemoveTrack(trackObj, callback){
     content.appendChild(canBtn);
     content.appendChild(addBtn);
 
-    showBox("ChimeIn", content);
+    showBox(content);
   });
 }
 
 function closeBox(){
-  document.body.removeChild(box);
-  box = null;
+  popout();
+  setTimeout( () => {
+    document.body.removeChild(box);
+    box = null;
+  }, 500);
+}
+
+function isBoxShowing(){
+  return box != null;
+}
+
+
+String.prototype.format = function(...replace){
+  let pat = /{}/gi;
+  let res = null
+  let arr = [];
+  while( (res = pat.exec(this)) != null){
+    arr.push(res);
+  }
+
+  let others = this.split("{}");
+  let out = "";
+
+  for(let i = 0; i < others.length; i++){
+    let part = replace[i];
+    let cur = arr[i];
+    let base = others[i];
+
+    out += base;
+
+    if(part == null || part == undefined || cur == null || cur == undefined){
+      continue;
+    }
+
+    out += part;
+  }
+
+  return new String(out.trim());
 }

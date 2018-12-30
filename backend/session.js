@@ -3,6 +3,7 @@ class Session{
     this.token = null;
     this.refresh = null;
     this.expire = null;
+    this.waitingForTokens = false;
   }
 
   setTokens(newToken, newExpire, newRefresh){
