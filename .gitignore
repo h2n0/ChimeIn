@@ -1,4 +1,4 @@
 node_modules/*
 backend/config.js
 workspace/*
-public/scripts/*.js
+public/scripts/min/*.js
