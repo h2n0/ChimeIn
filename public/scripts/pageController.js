@@ -250,6 +250,12 @@ window.onload = function(){
 
   // WINDOW load
   autoCheck(guid);
+
+
+  let obj = {
+    "event": "joining"
+  }
+  post("/session/data", makePostObject(obj));
 }
 
 
@@ -257,5 +263,5 @@ window.onbeforeunload = function(){
   let obj = {
     "event": "leaving"
   }
-  post("/test", makePostObject(obj));
+  post("/session/data", makePostObject(obj));
 }
