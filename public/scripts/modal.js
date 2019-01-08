@@ -129,6 +129,30 @@ function showRemoveTrack(trackObj, callback){
   });
 }
 
+function showHoldUp(){
+  let cont = document.createElement("div");
+  let phrase = document.createElement("h1");
+  let reason = "You've already got a load of songs in the queue<br>why not wait a while";
+  phrase.innerHTML = "Hold Up!"
+  cont.style = "text-align: center; color: black;";
+
+  let okbtn = document.createElement("div");
+  okbtn.innerHTML = "Okay";
+  okbtn.style = "margin: 0 auto; width: 50%; height: 70px; text-align: center; cursor: pointer; line-height: 70px; background-color: #9F9; position: relative; bottom: -70px";
+
+  okbtn.onclick = (e) => {
+    closeBox();
+  }
+
+  cont.appendChild(phrase);
+  let p = document.createElement("p");
+  p.style="padding-top: 10%";
+  p.innerHTML = reason;
+  cont.appendChild(p);
+  cont.appendChild(okbtn);
+  showBox(cont);
+}
+
 function closeBox(){
   popout();
   setTimeout( () => {

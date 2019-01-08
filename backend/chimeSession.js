@@ -232,6 +232,19 @@ class ChimeSession{
     }
   }
 
+  getSongsBy(guid){
+    let amt = 0;
+    for(let i = this.queue.length-1; i >= 0; i--){
+      let c = this.queue[i];
+      if(c.pusher == guid){
+        amt = amt + 1;
+      }else{
+        break;
+      }
+    }
+    return amt;
+  }
+
 }
 
 

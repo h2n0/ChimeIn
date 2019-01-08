@@ -15,6 +15,8 @@ class Session{
   renewTokens(newToken, expires){
     this.token = newToken;
     this.setExpire(expires);
+    this.waitingForTokens = false;
+    console.log("New expire:" + this.expire)
   }
 
   setExpire(newExpire){

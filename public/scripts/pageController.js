@@ -183,22 +183,32 @@ function populateSearchList(list, guid, tracks){
     nl.appendChild(title);
     nl.classList.add("searchItem");
     nl.onmousedown = (e) => {
-      showAddTrack(track, (added) =>{
-        if(added){
-          let uri = track.uri;
 
-          let obj = {
-            "id" : uri,
+      post("/session/limit", makePostObject(), (err,data) => {
+        if(err){
+          console.error(err)
+        }else{
+          let amt = parseInt(data)
+          if(amt < 5){ // Isn't currenly hogging the queue
+            showAddTrack(track, (added) =>{
+              if(added){
+                let uri = track.uri;
+                let obj = {
+                  "id" : uri,
+                }
+                post("/queue/push", makePostObject(obj), (err, data) => {
+                  if(err){
+                    console.error("Something has gone wrong while queueing a song");
+                  }else{
+                    console.log("Added song to queue!");
+                    updateQueue(guid);
+                  }
+                });
+              }
+            });
+          }else{
+            showHoldUp();
           }
-
-          post("/queue/push", makePostObject(obj), (err, data) => {
-            if(err){
-              console.error("Something has gone wrong while queueing a song");
-            }else{
-              console.log("Added song to queue!");
-              updateQueue(guid);
-            }
-          });
         }
       });
     }

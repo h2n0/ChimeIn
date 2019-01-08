@@ -19,17 +19,6 @@ app.use(express.static('public'));
 app.use(cookie());
 app.use(bodyParser.json());
 
-db.connect();
-
-
-db.query("SELECT * FROM users", (err, rows, fields) => {
-  if(err){
-    console.log(err);
-  }else{
-    console.log(Object.keys(rows[0]));
-  }
-});
-
 
 function checkExpire(){
   if(currentSession){
@@ -42,11 +31,9 @@ function checkExpire(){
           console.log("oh no");
           console.error(err.message);
         }else{
-          console.log(data);
           let token = data.body.access_token;
           let expire = data.body.expires_in;
           handler.renewTokens(token, expire);
-          handler.waitingForTokens = false;
         }
       });
     }
@@ -312,8 +299,18 @@ app.post("/queue/set", (req,res) => {
   sendNull(res);
 });
 
+app.post("/session/limit", (req,res) => {
+  let data = req.body;
+  if(changeToRoom(data.room)){
+    let amt = currentSession.getSongsBy(data.guid);
+    res.send(JSON.stringify(amt));
+  }else{
+    sendNull(res);
+  }
+});
+
 app.post("/session/data", (req,res) => {
-  let data = res.body;
+  let data = req.body;
 
   if(changeToRoom(data.room)){
     currentSession.handleEvent(data);
