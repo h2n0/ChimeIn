@@ -4,13 +4,13 @@ let connected = false;
 let lconnected = false;
 let lastID = null;
 var guests = false;
-
 let flag1 = false;
+let globalToken = null;
 
 
 function getNextAndPlay(token, callback){
   post("/queue/next", makePostObject(), (err, data) => {
-    if(!data){// Nothing next in the queue so lets try again soon
+    if(err){// Nothing next in the queue so lets try again soon
       setTimeout( () => {
         console.log("Nothing in q")
         getNextAndPlay(token, callback);
@@ -40,17 +40,13 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   let lpos = 0;
   let lId = -1;
   let lState = null;
+  globalToken = token;
 
   // Error handling
   player.addListener('initialization_error', ({ message }) => { console.error(message); });
   player.addListener('account_error', ({ message }) => { console.error(message); });
-  player.addListener('playback_error', ({ message }) => {
-    get("/auth/refresh", (data) => {
-      getNextAndPlay(token, () => {
-        get("/queue/pop");
-      });
-    });
-    console.error(message);
+  player.addListener('playback_error', (e) => {
+    console.log(e);
   });
 
   player.addListener('authentication_error', ({ message }) => {

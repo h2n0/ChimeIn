@@ -1,3 +1,5 @@
+let roomValue = 0;
+
 window.onload = function(){
 
   let join = document.getElementById("join");
@@ -27,7 +29,10 @@ window.onload = function(){
   }
 
   idContainer.onkeydown = (e) => {
-    if(e.keyCode != 13)return;
+    if(e.keyCode != 13){
+      formatData(idContainer.value.trim());
+      return;
+    }
     joinSession(idContainer.value.trim());
   }
 }
@@ -44,4 +49,11 @@ function joinSession(id){
       document.location.href = newUrl;
     }
   });
+}
+
+function formatData(box){
+  roomValue = parseInt(box.value.replace("-","")) || 0;
+  while(value.legth > 3){
+
+  }
 }

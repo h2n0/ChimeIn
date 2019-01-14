@@ -133,7 +133,7 @@ function showHoldUp(){
   let cont = document.createElement("div");
   let phrase = document.createElement("h1");
   let reason = "You've already got a load of songs in the queue<br>why not wait a while";
-  phrase.innerHTML = "Hold Up!"
+  phrase.innerHTML = "Hol' Up!"; // Dom's correction
   cont.style = "text-align: center; color: black;";
 
   let okbtn = document.createElement("div");

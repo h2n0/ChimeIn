@@ -131,6 +131,7 @@ class ChimeSession{
       spotify.getRecommendations(recData, (err,data) => {
         if(err){
           console.error(err.statusCode);
+          console.log("Error?");
           callback(null);
         }else{
           let tracks = data.body.tracks;

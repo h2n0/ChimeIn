@@ -74,3 +74,24 @@ function getCurretDeviceId(token, callback){
   xhttp.setRequestHeader("Authorization","Bearer " + token);
   xhttp.send();
 }
+
+
+function getCurrentPlayingSong(token, callback){
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status >= 200) {
+        let code = this.status - 200;
+        console.log(this.status);
+        if(code == 0){ // Okay
+          callback(this.responseText);
+        }else if(code == 4){// Private or no devices
+          callback(null);
+        }
+      }
+    };
+    let url = "https://api.spotify.com/v1/me/player/currently-playing?market=GB";
+    xhttp.open("GET", url, true);
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("Authorization","Bearer " + token);
+    xhttp.send();
+}

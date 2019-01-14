@@ -63,6 +63,9 @@ function updateQueue(guid){
   let hq = document.getElementById("qHead");
 
   post("/queue/human", makePostObject(), (err, tracks) => {
+    if(err){
+      return;
+    }
     tracks = JSON.parse(tracks);
     let numTracks = tracks != null ? tracks.length : 0;
     let qc = q.childNodes.length;

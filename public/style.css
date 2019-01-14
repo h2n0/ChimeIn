@@ -294,4 +294,8 @@ div.indexOption{
       padding-bottom: 10%;
       padding-top: 5%;
     }
+
+    div.hostBtn{
+      display: none;
+    }
 }
