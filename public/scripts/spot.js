@@ -30,8 +30,9 @@ function getNextAndPlay(token, callback){
   });
 }
 
-window.onSpotifyWebPlaybackSDKReady = () => {
-  const token = getCookie("spotID");
+
+function createPlayer(token, autoConnect){
+  console.log("HU");
   player = new Spotify.Player({
     name: 'Chime In',
     getOAuthToken: cb => { cb(token); }
@@ -115,4 +116,9 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
   // Connect to the player!
   player.connect();
+}
+
+window.onSpotifyWebPlaybackSDKReady = () => {
+  let token = getCookie("spotID");
+  createPlayer(token, false);
 };

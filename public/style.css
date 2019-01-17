@@ -107,14 +107,14 @@ div.tab{
 }
 
 .tabs button{
-  width: 50%;
+  width: 33.33%;
   background-color: #001145;
   border: none;
   color: inherit;
   font: inherit;
   font-size: 2em;
   cursor: pointer;
-  padding: 2%;
+  padding: 3%;
 }
 
 .tabs button.active{
@@ -254,6 +254,18 @@ div.indexOption{
   width: 100px;
   height: 50px;
 
+}
+
+div.roomInfo {
+  font-size: 2em;
+  text-align: center;
+  font-weight: bold;
+  color: var(--main-accent-color);
+}
+
+div.roomInfo > p#humanCode{
+  font-size: 1.5em;
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 600px) {

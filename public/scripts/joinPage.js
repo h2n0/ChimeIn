@@ -30,7 +30,6 @@ window.onload = function(){
 
   idContainer.onkeydown = (e) => {
     if(e.keyCode != 13){
-      formatData(idContainer.value.trim());
       return;
     }
     joinSession(idContainer.value.trim());
@@ -40,6 +39,13 @@ window.onload = function(){
 
 function joinSession(id){
   if(id == "" || id.length < 8)return;
+
+  let test = /([0-9]{3})/g
+  let found = id.match(test);
+  if(found){
+    id = found[0] + found[1] + found[2];
+  }
+
   get("/isSession/"+id, (data) => {
     console.log(data);
     if(data == "false"){
@@ -49,11 +55,4 @@ function joinSession(id){
       document.location.href = newUrl;
     }
   });
-}
-
-function formatData(box){
-  roomValue = parseInt(box.value.replace("-","")) || 0;
-  while(value.legth > 3){
-
-  }
 }

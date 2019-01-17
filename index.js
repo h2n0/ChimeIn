@@ -34,6 +34,7 @@ function checkExpire(){
           let token = data.body.access_token;
           let expire = data.body.expires_in;
           handler.renewTokens(token, expire);
+          spotify.setAccessToken(token);
         }
       });
     }
@@ -91,7 +92,6 @@ app.get("/newSession", (req, res) => {
   let ns = new ChimeSession(id);
   sessions[""+id] = ns;
   currentSession = ns;
-
   sessionIds.push(id);
   res.send(id);
 });

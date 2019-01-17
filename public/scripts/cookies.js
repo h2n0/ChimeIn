@@ -5,7 +5,6 @@ function setCookie(name, value, hours){
 
 function getCookie(name){
   let cs = document.cookie.trim();
-  console.log(cs);
   if(cs == "")return null;
   let parts = cs.split(";");
   for(let i = 0; i < parts.length; i++){

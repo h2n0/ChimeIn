@@ -17,7 +17,6 @@ block scripts
 
 block content
   span(id="roomCode", style="display:none;")= id
-  h2(style="display:none;") #CODE
   div
     a(href="https://open.spotify.com/", id="imageLink", target="_blank")
       img(src="/assets/connect.png", id="playing", style="display:block; margin: auto;")
@@ -26,6 +25,7 @@ block content
   div.tabs
     button(onclick="openTab(0)", id="qHead").active Queue
     button(onclick="openTab(1)") Search
+    button(onclick="openTab(2)") Room
 
 
   div.tabContainer(index=0)
@@ -36,3 +36,8 @@ block content
     div
       input(id="songSearch", placeholder="Song name")
       ul(id="q")
+
+  div.tabContainer.hidden(index=2)
+    div.roomInfo
+      p Room Number
+      p(id="humanCode")

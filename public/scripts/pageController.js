@@ -219,6 +219,15 @@ function populateSearchList(list, guid, tracks){
   }
 }
 
+function copyText(text){
+  let ta = document.createElement("textarea");
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand("copy");
+  document.body.removeChild(ta);
+}
+
 
 window.onload = function(){
   let searchBox = document.getElementById("songSearch");
@@ -263,6 +272,16 @@ window.onload = function(){
 
   // WINDOW load
   autoCheck(guid);
+
+  let room = getRoomCode();
+  let realCode = room.substring(0,3) + "-" + room.substring(3,6) + "-" + room.substring(6,9);
+  let humanCode = document.getElementById("humanCode");
+  humanCode.innerHTML = realCode;
+
+  humanCode.onclick = (e) => {
+    copyText("http://chimein.live/session/" + realCode);
+  };
+
 
 
   let obj = {
