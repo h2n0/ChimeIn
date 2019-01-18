@@ -15,7 +15,7 @@ let sessions = [];
 let sessionIds = [];
 
 app.set('view engine', 'pug');
-app.use(express.static('public'));
+app.use(express.static('./public'));
 app.use(cookie());
 app.use(bodyParser.json());
 
