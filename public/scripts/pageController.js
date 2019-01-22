@@ -279,7 +279,7 @@ window.onload = function(){
   humanCode.innerHTML = realCode;
 
   humanCode.onclick = (e) => {
-    copyText("http://chimein.live/session/" + realCode);
+    copyText("http://chimein.live/session/" + room);
   };
 
 

@@ -8,12 +8,12 @@ let flag1 = false;
 let globalToken = null;
 
 
-function getNextAndPlay(token, callback){
+function getNextAndPlay(callback){
   post("/queue/next", makePostObject(), (err, data) => {
     if(err){// Nothing next in the queue so lets try again soon
       setTimeout( () => {
         console.log("Nothing in q")
-        getNextAndPlay(token, callback);
+        getNextAndPlay(globalToken, callback);
       }, 1000 * 2);
     }else{// Something was in the queue so we are going to try and play it
       let j = JSON.parse(data);
@@ -22,7 +22,7 @@ function getNextAndPlay(token, callback){
       if(status == 201){ // Song was recommended
         uri = "spotify:track:" + j.id;
       }
-      playSong(token, uri);
+      playSong(globalToken, uri);
       if(callback){
         callback();
       }
@@ -31,17 +31,29 @@ function getNextAndPlay(token, callback){
 }
 
 
-function createPlayer(token, autoConnect){
+function createPlayer(autoConnect){
   console.log("HU");
+  let token = null;
   player = new Spotify.Player({
     name: 'Chime In',
-    getOAuthToken: cb => { cb(token); }
+    getOAuthToken: (cb) => {
+      console.log("Getting tokens");
+      post("/session/auth", makePostObject(), (err,data) => {
+        if(err){
+          console.error("unable to get auth tokens");
+          cb(-1);
+        }else{
+          let code = data.substring(1, data.length-1);
+          globalToken = code;
+          cb(code);
+        }
+      });
+    }
   });
 
   let lpos = 0;
   let lId = -1;
   let lState = null;
-  globalToken = token;
 
   // Error handling
   player.addListener('initialization_error', ({ message }) => { console.error(message); });
@@ -51,8 +63,7 @@ function createPlayer(token, autoConnect){
   });
 
   player.addListener('authentication_error', ({ message }) => {
-    console.log("Authentication failed, need to sign in first")
-    post("/auth/refresh", makePostObject());
+    //createPlayer(true);
   });
 
   // Playback status updates
@@ -94,7 +105,7 @@ function createPlayer(token, autoConnect){
     // Next song check
     if(pos == 0 && (state.paused || !state.paused) && flag1){
       flag1 = false;
-      getNextAndPlay(token, () => {
+      getNextAndPlay(() => {
         post("/queue/pop", makePostObject());
         console.log("New song is playing!");
       });
@@ -119,6 +130,5 @@ function createPlayer(token, autoConnect){
 }
 
 window.onSpotifyWebPlaybackSDKReady = () => {
-  let token = getCookie("spotID");
-  createPlayer(token, false);
+  createPlayer(false);
 };

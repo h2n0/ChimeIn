@@ -25,6 +25,10 @@ class Session{
     this.expire = d;
   }
 
+  getToken(){
+    return this.token;
+  }
+
 
   hasExpired(){
     return Date.now() > this.expire;

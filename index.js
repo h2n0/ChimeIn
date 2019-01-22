@@ -154,6 +154,16 @@ app.get("/host", (req, res) => {
   res.redirect("/login");
 });
 
+app.get("/update", (req, res) => {
+  let room = req.query.session;
+  if(!room){
+    res.redirect("/");
+  }else{
+    console.log(room);
+    res.render("update");
+  }
+});
+
 app.get("/session/:id", (req, res) => {
   let id = req.params.id;
   res.render("session", {host: req.cookies.sessionHost || false, id:id});
@@ -304,6 +314,16 @@ app.post("/session/limit", (req,res) => {
   if(changeToRoom(data.room)){
     let amt = currentSession.getSongsBy(data.guid);
     res.send(JSON.stringify(amt));
+  }else{
+    sendNull(res);
+  }
+});
+
+app.post("/session/auth", (req, res) => {
+  let data = req.body;
+  if(changeToRoom(data.room)){
+    let code = currentSession.sessionHandler.getToken();
+    res.send(JSON.stringify(code));
   }else{
     sendNull(res);
   }
