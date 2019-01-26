@@ -138,8 +138,6 @@ app.get("/auth", (req,res) => {
         }else{
           name = data.body["display_name"];
           premium = data.body["product"] == "premium";
-          res.cookie("spotPremium", ""+premium);
-          res.cookie("spotName", ""+name);
           if(premium){
             let id = genId();
             // Make sure we get an empty room
