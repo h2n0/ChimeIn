@@ -270,9 +270,6 @@ window.onload = function(){
     });
   }
 
-  // WINDOW load
-  autoCheck(guid);
-
   let room = getRoomCode();
   let realCode = room.substring(0,3) + "-" + room.substring(3,6) + "-" + room.substring(6,9);
   let humanCode = document.getElementById("humanCode");
@@ -287,7 +284,7 @@ window.onload = function(){
   let obj = {
     "event": "joining"
   }
-  post("/session/data", makePostObject(obj));
+  //post("/session/data", makePostObject(obj));
 }
 
 

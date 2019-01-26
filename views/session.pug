@@ -34,10 +34,12 @@ block content
 
   div.tabContainer.hidden(index=1)
     div
-      input(id="songSearch", placeholder="Song name")
+      input(id="songSearch", placeholder="Song name", type="search")
       ul(id="q")
 
   div.tabContainer.hidden(index=2)
     div.roomInfo
       p Room Number
       p(id="humanCode")
+      div.leaveRoom
+        p Leave Room

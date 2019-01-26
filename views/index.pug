@@ -6,22 +6,19 @@ block scripts
   script(src="/scripts/valid.js")
   script(src="/scripts/cookies.js")
   script(src="/scripts/joinPage.js")
+  script(src="/scripts/modal.js")
+  script(src="/scripts/understudy.js")
 
 
 block content
 
-  input(name="id", id="sessionId", required, autocomplete="off", placeholder="123-456-789").sessionID
+  input(name="id", type="number", id="sessionId", autocomplete="off").sessionID
+  p(id="fake", style="display: none;").sessionID
 
   div.partyOptions
     a(id="create", style="cursor:pointer;")
       div.option.hostBtn(style="background-color:#1DB954;")
-        if user
-          if canHost
-            p Host
-          else
-            p Need to have premium to host
-        else
-          p Sign in to Spotify to host
+        p(status=0) Host with Spotify
 
     a(id="join",style="cursor:pointer;")
       div.option

@@ -73,6 +73,7 @@ function sendNull(res){
 }
 
 app.get("/", (req, res) => {
+  res.clearCookie("sessionHost");
   res.render("index", {user: req.cookies.spotName, canHost: req.cookies.spotPremium});
 });
 
@@ -123,34 +124,39 @@ app.get("/auth", (req,res) => {
 
       spotify.setAccessToken(token);
       spotify.setRefreshToken(refresh);
-
-      res.cookie("spotID", token);
       spotify.getMe( (err, data) => {
         if(err){
           console.error(err);
-          res.redirect("/");
+          res.redirect("/?error=1");
         }else{
           name = data.body["display_name"];
           premium = data.body["product"] == "premium";
           res.cookie("spotPremium", ""+premium);
           res.cookie("spotName", ""+name);
-          res.redirect("/");
+          if(premium){
+            let id = genId();
+            // Make sure we get an empty room
+            while(sessions[""+id]){
+              id = genId();
+            }
+
+            let ns = new ChimeSession(id);
+            sessions[""+id] = ns;
+            currentSession = ns;
+            ns.sessionHandler.setTokens(token, expire, refresh);
+            sessionIds.push(id);
+            res.cookie("sessionHost", "true");
+            res.redirect("/session/"+id);
+          }else{
+            res.redirect("/?error=2");
+          }
         }
       });
     }
   });
 });
 
-app.post("/auth/refresh", (req, res) => {
-  let data = req.body;
-  if(changeToRoom(data.room)){
-
-  }
-  sendNull(res);
-});
-
 app.get("/host", (req, res) => {
-  res.cookie("sessionHost", "true");
   res.redirect("/login");
 });
 

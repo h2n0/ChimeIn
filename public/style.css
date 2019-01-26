@@ -72,13 +72,33 @@ input.sessionID{
   width: 50%;
   border: none;
   background-color: inherit;
-  border-bottom: 1px solid white;
+  border-bottom: 2px solid rgba(123,123,123,0.25);
   text-align: center;
   color: white;
   margin: 0 auto;
-  font-size: 1.75em;
-  padding-top: 25%;
+  font-size: 5em;
+  padding-top: 15%;
   margin-bottom: 5%;
+  transition: border 0.25s ease-in;
+  outline: none;
+}
+
+input.sessionID.active{
+  border-bottom: 2px solid var(--main-accent-color);
+}
+
+p.sessionID {
+    display: block;
+    width: 50%;
+    border: none;
+    background-color: inherit;
+    border-bottom: 2px solid var(--main-accent-color);
+    text-align: center;
+    color: white;
+    margin: 0 auto;
+    font-size: 5em;
+    padding-top: 15%;
+    margin-bottom: 5%;
 }
 
 a:visited{

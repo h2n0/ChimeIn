@@ -32,7 +32,6 @@ function getNextAndPlay(callback){
 
 
 function createPlayer(autoConnect){
-  console.log("HU");
   let token = null;
   player = new Spotify.Player({
     name: 'Chime In',
@@ -118,6 +117,7 @@ function createPlayer(autoConnect){
   player.addListener('ready', ({ device_id }) => {
     console.log('Ready with Device ID', device_id);
     player.setName("Chime In: " + getHumanRoomCode());
+    autoCheck(genID());
   });
 
   // Not Ready

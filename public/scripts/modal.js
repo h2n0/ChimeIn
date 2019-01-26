@@ -153,6 +153,31 @@ function showHoldUp(){
   showBox(cont);
 }
 
+function showOkayDialog(title, inner){
+
+  let content = document.createElement("div");
+  let header = document.createElement("h1");
+  header.innerHTML = title;
+  header.style = "text-align: center";
+
+  let p = document.createElement("p");
+  p.innerHTML = inner;
+  p.style = "font-size: 1.5em; text-align: center;";
+  content.appendChild(header);
+  content.appendChild(p);
+
+  let okbtn = document.createElement("div");
+  okbtn.innerHTML = "Okay";
+  okbtn.style = "margin: 0 auto; width: 50%; height: 70px; text-align: center; cursor: pointer; line-height: 70px; background-color: #9F9; position: relative; bottom: -70px";
+
+  okbtn.onclick = (e) => {
+    closeBox();
+  }
+
+  content.appendChild(okbtn);
+  showBox(content);
+}
+
 function closeBox(){
   popout();
   setTimeout( () => {

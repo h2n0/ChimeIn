@@ -19,6 +19,7 @@ class ChimeSession{
     this.sessionHandler = new Session();
     this.isActive = false;
     this.songsPlayed = 0;
+    this.country = "GB";
   }
 
   changeToThisSession(spotify){
