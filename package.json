@@ -26,6 +26,7 @@
     "pug": "^2.0.3",
     "request": "^2.88.0",
     "spotify-web-api-node": "^4.0.0",
-    "uglify-js": "^3.4.9"
+    "uglify-js": "^3.4.9",
+    "uglifyjs": "^2.4.11"
   }
 }
