@@ -1,19 +1,18 @@
 extends base
 
 block scripts
-  script(src="/scripts/cookies.js")
-  script(src="/scripts/ajax.js")
 
-  script(src="/scripts/guest.js")
-  script(src="/scripts/modal.js")
-  script(src="/scripts/pageController.js")
-
-
-  script(src="/scripts/spot.js")
+block scripts
+  script(src= scripts + "/cookies" + scriptEnding, type="application/javascript")
+  script(src= scripts + "/ajax" + scriptEnding, type="application/javascript")
+  script(src= scripts + "/guest" + scriptEnding, type="application/javascript")
+  script(src= scripts + "/modal" + scriptEnding, type="application/javascript")
+  script(src= scripts + "/pageController" + scriptEnding, type="application/javascript")
+  script(src= scripts + "/spot" + scriptEnding, type="application/javascript")
 
   if host
     script(src="https://sdk.scdn.co/spotify-player.js")
-    script(src="/scripts/tutorial.js")
+    script(src= scripts + "/tutorial" + scriptEnding, type="application/javascript")
 
 block content
   span(id="roomCode", style="display:none;")= id

@@ -19,6 +19,10 @@ app.use(express.static('./public'));
 app.use(cookie());
 app.use(bodyParser.json());
 
+if(config.minimisedScripts){
+  console.error("Using minimised scripts, use normal scripts if in development!");
+}
+
 
 function checkExpire(){
   if(currentSession){
@@ -74,7 +78,10 @@ function sendNull(res){
 
 app.get("/", (req, res) => {
   res.clearCookie("sessionHost");
-  res.render("index", {user: req.cookies.spotName, canHost: req.cookies.spotPremium});
+  let min = config.minimisedScripts;
+  let scriptLoc = min?"/scripts/min":"/scripts";
+  let scriptEnd = min?".min.js":".js";
+  res.render("index", {scripts: scriptLoc, scriptEnding: scriptEnd, user: req.cookies.spotName, canHost: req.cookies.spotPremium});
 });
 
 app.get("/about", (req, res) =>{
@@ -172,7 +179,10 @@ app.get("/update", (req, res) => {
 
 app.get("/session/:id", (req, res) => {
   let id = req.params.id;
-  res.render("session", {host: req.cookies.sessionHost || false, id:id});
+  let min = config.minimisedScripts;
+  let scriptLoc = min?"/scripts/min":"/scripts";
+  let scriptEnd = min?".min.js":".js";
+  res.render("session", {scripts: scriptLoc, scriptEnding: scriptEnd, host: req.cookies.sessionHost || false, id:id});
 });
 
 app.post("/search", (req, res) => {
