@@ -13,6 +13,11 @@ block scripts
   if host
     script(src="https://sdk.scdn.co/spotify-player.js")
     script(src= scripts + "/tutorial" + scriptEnding, type="application/javascript")
+  else
+    script.
+      window.addEventListener("load", (e) => {
+        autoCheck(genID());
+      });
 
 block content
   span(id="roomCode", style="display:none;")= id
