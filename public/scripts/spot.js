@@ -10,8 +10,6 @@ let globalToken = null;
 
 function getNextAndPlay(callback){
   post("/queue/next", makePostObject(), (err, data) => {
-    console.log(err);
-    console.log(data);-
     if(err){// Nothing next in the queue so lets try again soon
       setTimeout( () => {
         console.log("Nothing in q")

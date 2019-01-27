@@ -12,14 +12,14 @@ block scripts
 
 block content
 
-  input(name="id", type="number", id="sessionId", autocomplete="off").sessionID
+  input(name="id", type="number", id="sessionId", pattern="[0-9]*", autocomplete="off", placeholder="Room Id").sessionID
   p(id="fake", style="display: none;").sessionID
 
   div.partyOptions
     a(id="create", style="cursor:pointer;")
-      div.option.hostBtn(style="background-color:#1DB954;")
+      button.option.hostBtn(style="background-color:#1DB954;")
         p(status=0) Host with Spotify
 
     a(id="join",style="cursor:pointer;")
-      div.option
+      button.option
         p Join

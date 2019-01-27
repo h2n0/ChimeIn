@@ -8,9 +8,6 @@
   --modal-padding: 2%;
   --modal-vertical: calc((50% - 170px) / 3);
 }
-
-
-
 body{
   background-color: var(--main-bg-color);
   color: white;
@@ -44,7 +41,7 @@ div.title{
   text-align: center;
 }
 
-.option{
+button.option{
   width: 50%;
   height: 12%;
   background-color: #C00;
@@ -55,9 +52,12 @@ div.title{
   margin-bottom: 3%;
   margin-left: 25%;
   display: flex;
+  border: none;
+  color: var(--main-accent-color);
+  cursor: pointer;
 }
 
-.option p{
+button.option p{
   margin: auto;
   text-align: center;
 }
@@ -327,7 +327,17 @@ div.roomInfo > p#humanCode{
       padding-top: 5%;
     }
 
-    div.hostBtn{
+    button.hostBtn{
       display: none;
+    }
+
+    input.sessionID{
+      width: 75%;
+    }
+
+    button.option{
+      width: 70%;
+      margin-bottom: 3%;
+      margin-left: 15%;
     }
 }

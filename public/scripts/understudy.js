@@ -104,7 +104,7 @@ class UnderStudy{
     this.formattedValue = out;
     this.fake.value = this.formattedValue;
 
-    let shrink = 3;
+    let shrink = 1.5;
     let fs = 5 - ((this.fake.value.length / 11) * shrink);
     this.copyLook();
     this.fake.style.fontSize = fs + "em";
@@ -135,4 +135,5 @@ class UnderStudy{
 
 window.addEventListener("load", (e) => {
   let d = new UnderStudy(document.getElementById("sessionId"));
+  alert(window.innerWidth + " " + window.innerHeight);
 });
