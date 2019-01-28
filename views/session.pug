@@ -27,13 +27,20 @@ block content
       p(style="text-align: center; font-size: 1.8em", id="NAT") Song name
 
   div.tabs
-    button(onclick="openTab(0)", id="qHead").active Queue
-    button(onclick="openTab(1)") Search
-    button(onclick="openTab(2)") Room
+    div(onclick="openTab(0)", id="qHead").active
+      p.noMobile Queue
+      img.noDesktop(src="/assets/queue.svg")
+    div(onclick="openTab(1)")
+      p.noMobile Search
+      img.noDesktop(src="/assets/search.svg")
+    div(onclick="openTab(2)")
+      p.noMobile Room
+      img.noDesktop(src="/assets/room.svg")
 
 
   div.tabContainer(index=0)
     div
+      p(id="noSongs").noSongs No songs in the queue
       ul(id="queue")
 
   div.tabContainer.hidden(index=1)

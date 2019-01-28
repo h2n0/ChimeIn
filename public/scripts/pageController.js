@@ -19,7 +19,7 @@ function openTab(index){
     }
   }
 
-  let tabs = document.getElementsByTagName("button");
+  let tabs = document.getElementsByClassName("tabs")[0].children;
   for(let i = 0; i < tabs.length; i++){
     let ct = tabs[i];
     if(i == index){
@@ -60,7 +60,7 @@ function giveSpotLife(spot, track){
 
 function updateQueue(guid){
   let q = document.getElementById("queue");
-  let hq = document.getElementById("qHead");
+  let hq = document.getElementById("qHead").children[0];
 
   post("/queue/human", makePostObject(), (err, tracks) => {
     if(err){
@@ -134,10 +134,14 @@ function updateQueue(guid){
       }
     }
 
+    let noSongs = document.getElementById("noSongs");
+
     if(tracks){
       hq.innerHTML = "Queue (" + numTracks + ")";
+      noSongs.style.display = "none";
     }else{
       hq.innerHTML = "Queue (0)";
+      noSongs.style.display = "block";
     }
   });
 }
@@ -274,7 +278,7 @@ window.onload = function(){
   let realCode = room.substring(0,3) + "-" + room.substring(3,6) + "-" + room.substring(6,9);
   let humanCode = document.getElementById("humanCode");
   humanCode.innerHTML = realCode;
-  document.title = realCode;
+  document.title = "ChimeIn: " + realCode;
 
   humanCode.onclick = (e) => {
     copyText("http://chimein.live/session/" + room);

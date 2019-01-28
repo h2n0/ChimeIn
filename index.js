@@ -77,10 +77,11 @@ function sendNull(res){
 }
 
 app.get("/", (req, res) => {
-  res.clearCookie("sessionHost");
   let min = config.minimisedScripts;
   let scriptLoc = min?"/scripts/min":"/scripts";
   let scriptEnd = min?".min.js":".js";
+  req.session = null;
+  res.clearCookie("sessionHost");
   res.render("index", {scripts: scriptLoc, scriptEnding: scriptEnd, user: req.cookies.spotName, canHost: req.cookies.spotPremium});
 });
 
@@ -150,7 +151,7 @@ app.get("/auth", (req,res) => {
             currentSession = ns;
             ns.sessionHandler.setTokens(token, expire, refresh);
             sessionIds.push(id);
-            res.cookie("sessionHost", "true");
+            res.cookie("sessionHost", "true", {path:"/"});
             res.redirect("/session/"+id);
           }else{
             res.redirect("/?error=2");
@@ -177,10 +178,14 @@ app.get("/update", (req, res) => {
 
 app.get("/session/:id", (req, res) => {
   let id = req.params.id;
-  let min = config.minimisedScripts;
-  let scriptLoc = min?"/scripts/min":"/scripts";
-  let scriptEnd = min?".min.js":".js";
-  res.render("session", {scripts: scriptLoc, scriptEnding: scriptEnd, host: req.cookies.sessionHost || false, id:id});
+  if(sessions[""+id]){
+    let min = config.minimisedScripts;
+    let scriptLoc = min?"/scripts/min":"/scripts";
+    let scriptEnd = min?".min.js":".js";
+    res.render("session", {scripts: scriptLoc, scriptEnding: scriptEnd, host: req.cookies.sessionHost || false, id:id});
+  }else{ // Session isn't valid, stop rendering these pages
+    res.redirect("/");
+  }
 });
 
 app.post("/search", (req, res) => {
@@ -253,7 +258,9 @@ app.post("/queue/current", (req,res) => {
 
 app.post("/queue/next", (req,res) =>{
   let body = req.body;
+  console.log(body);
   if(changeToRoom(body.room)){
+    console.log("In the room!");
     currentSession.getNextSong(spotify, (data) =>{
       res.send(JSON.stringify(data));
     });

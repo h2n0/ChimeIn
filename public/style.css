@@ -126,7 +126,8 @@ div.tab{
   border-radius: 10px;
 }
 
-.tabs button{
+.tabs > div{
+  display: inline-block;
   width: 33.33%;
   background-color: #001145;
   border: none;
@@ -134,10 +135,17 @@ div.tab{
   font: inherit;
   font-size: 2em;
   cursor: pointer;
-  padding: 3%;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  text-align: center;
 }
 
-.tabs button.active{
+p#noSongs {
+  text-align: center;
+  font-size: 2em;
+}
+
+.tabs div.active{
   background-color: #003B39;
 }
 
@@ -242,6 +250,10 @@ img.logo{
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+.noDesktop{
+  display: none;
+}
+
 
 /* Modal Content/Box */
 .modalContent {
@@ -327,10 +339,6 @@ div.roomInfo > p#humanCode{
       padding-top: 5%;
     }
 
-    button.hostBtn{
-      display: none;
-    }
-
     input.sessionID{
       width: 75%;
     }
@@ -339,5 +347,13 @@ div.roomInfo > p#humanCode{
       width: 70%;
       margin-bottom: 3%;
       margin-left: 15%;
+    }
+
+    .noMobile{
+      display: none;
+    }
+
+    .noDesktop{
+      display: inherit;
     }
 }
