@@ -8,7 +8,7 @@ const ChimeResponse = require("./response.js");
 
 class ChimeSession{
 
-  constructor(id){
+  constructor(id, country){
     this.id = id;
     this.reccs = new AutoTrack();
     this.users = [];
@@ -19,7 +19,8 @@ class ChimeSession{
     this.sessionHandler = new Session();
     this.isActive = false;
     this.songsPlayed = 0;
-    this.country = "GB";
+    this.country = country || "US";
+    console.log("New session #" + id + " from " + country);
   }
 
   changeToThisSession(spotify){
@@ -73,7 +74,7 @@ class ChimeSession{
       id = id[id.length-1];
       this.reccs.addElement(id);
 
-      spotify.getTrack(id, (err,data) => {
+      spotify.getTrack(id, {market: this.country}, (err,data) => {
         if(err){
           callback(null);
         }else{
@@ -129,7 +130,7 @@ class ChimeSession{
         min_populatiry: 50
       };
 
-      spotify.getRecommendations(recData, (err,data) => {
+      spotify.getRecommendations(recData, {market: this.country}, (err,data) => {
         if(err){
           console.error(err.statusCode);
           console.log("Error?");

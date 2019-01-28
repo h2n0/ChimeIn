@@ -135,5 +135,5 @@ class UnderStudy{
 
 window.addEventListener("load", (e) => {
   let d = new UnderStudy(document.getElementById("sessionId"));
-  alert(window.innerWidth + " " + window.innerHeight);
+  //alert(window.innerWidth + " " + window.innerHeight);
 });

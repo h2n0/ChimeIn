@@ -145,7 +145,7 @@ app.get("/auth", (req,res) => {
               id = genId();
             }
 
-            let ns = new ChimeSession(id);
+            let ns = new ChimeSession(id, data.body.country);
             sessions[""+id] = ns;
             currentSession = ns;
             ns.sessionHandler.setTokens(token, expire, refresh);

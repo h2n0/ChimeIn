@@ -79,7 +79,7 @@ input.sessionID{
   font-size: 5em;
   padding-top: 15%;
   margin-bottom: 5%;
-  transition: border 0.25s ease-in;
+  transition: border 0.25s ease-in-out;
   outline: none;
 }
 
