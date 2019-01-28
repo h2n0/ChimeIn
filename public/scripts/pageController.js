@@ -274,6 +274,7 @@ window.onload = function(){
   let realCode = room.substring(0,3) + "-" + room.substring(3,6) + "-" + room.substring(6,9);
   let humanCode = document.getElementById("humanCode");
   humanCode.innerHTML = realCode;
+  document.title = realCode;
 
   humanCode.onclick = (e) => {
     copyText("http://chimein.live/session/" + room);
