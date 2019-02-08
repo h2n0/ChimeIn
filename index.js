@@ -108,14 +108,19 @@ app.get("/newSession", (req, res) => {
 
 app.get("/isSession/:id", (req, res) => {
   let id = req.params.id;
+
   let sesh = sessions[""+id];
 
-  let data = {
-    isLive: sesh != null,
-    isActive: sesh != null?sesh.canJoin: false
-  }
+  if(sesh){
+    let data = {
+      isLive: sesh != null,
+      isActive: sesh != null ? sesh.canJoin : false
+    }
 
-  res.send(JSON.stringify(data));
+    res.send(JSON.stringify(data));
+  }else{
+    sendNull(res);
+  }
 });
 
 app.get("/login", (req, res) => {
