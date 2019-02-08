@@ -93,12 +93,16 @@ function joinSession(id){
   }
 
   get("/isSession/"+id, (data) => {
-    data = (data == "true");
     if(!data){
       showOkayDialog("Are you sure?", "The room you are looking for dosen't exist");
     }else{
-      let newUrl = "/session/"+id;
-      document.location.href = newUrl;
+      data = JSON.parse(data);
+      if(data.isLive && data.isActive){
+        let newUrl = "/session/"+id;
+        document.location.href = newUrl;
+      }else{
+        showOkayDialog("Pssst!", "Looks like the host is still setting things up");
+      }
     }
   });
 }

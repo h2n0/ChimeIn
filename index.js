@@ -81,7 +81,7 @@ app.get("/", (req, res) => {
   let scriptLoc = min?"/scripts/min":"/scripts";
   let scriptEnd = min?".min.js":".js";
   req.session = null;
-  res.clearCookie("sessionHost");
+  res.clearCookie("sessionHost", {path:"/session/"});
   res.render("index", {scripts: scriptLoc, scriptEnding: scriptEnd, user: req.cookies.spotName, canHost: req.cookies.spotPremium});
 });
 
@@ -109,8 +109,15 @@ app.get("/newSession", (req, res) => {
 app.get("/isSession/:id", (req, res) => {
   let id = req.params.id;
   let sesh = sessions[""+id];
-  let free = sesh != undefined;
-  res.send(free);
+
+  let data = {
+    isLive: sesh != null,
+    isActive: sesh != null?sesh.canJoin: false
+  }
+
+
+
+  res.send(JSON.stringify(data));
 });
 
 app.get("/login", (req, res) => {
@@ -352,9 +359,9 @@ app.post("/session/auth", (req, res) => {
 
 app.post("/session/data", (req,res) => {
   let data = req.body;
-
   if(changeToRoom(data.room)){
     currentSession.handleEvent(data);
+    sendNull(res);
   }else{
     sendNull(res);
   }

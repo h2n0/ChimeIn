@@ -1,4 +1,11 @@
+let setId = null;
+
 function genID(){
+
+  if(setId){
+    return setId;
+  }
+
   let nav = window.navigator;
   let screen = window.screen;
 
@@ -13,8 +20,9 @@ function genID(){
   guid += screen.width || "";
   guid += screen.pixelDepth || "";
   guid += screen.colorDepth || "";
-
-  return btoa(parseInt(guid).toString(16));
+  
+  setId = btoa(parseInt(guid).toString(16));
+  return setId;
 }
 
 

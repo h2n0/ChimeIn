@@ -7,6 +7,7 @@ title.innerHTML = "Let's connect";
 connectBox.style = "text-align: center;";
 
 let details = document.createElement("h1");
+details.classList.add("tutCode");
 connectBox.appendChild(title);
 connectBox.appendChild(details);
 
@@ -27,6 +28,7 @@ function tutStep(e){
   if(!userConnected){
     if(!isBoxShowing()){
       showBox(connectBox, {blurClose:false});
+      connectBox.classList.add("tutBox");
     }
     player.getCurrentState().then( (data) => {
       if(data == null){
@@ -38,6 +40,18 @@ function tutStep(e){
         closeBox();
         player.setVolume(0.25).then(() => {
           console.log('Volume updated!');
+
+          let seshInfo = {
+            "event" : "endTut"
+          }
+
+          post("/session/data", makePostObject(seshInfo), (err, data) => {
+            if(err){
+              console.error("Oh no");
+            }else{
+              this.canJoin = true;
+            }
+          });
         });
       }
     }, (err) => {

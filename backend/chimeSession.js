@@ -20,6 +20,7 @@ class ChimeSession{
     this.isActive = false;
     this.songsPlayed = 0;
     this.country = country || "US";
+    this.canJoin = false;
     console.log("New session #" + id + " from " + country);
   }
 
@@ -232,6 +233,8 @@ class ChimeSession{
       }
     }else if(event == "joining"){ // User joined session
       this.users.push(user);
+    }else if(event == "endTut"){ // Host has completed the tutorial
+      this.canJoin = true;
     }
   }
 

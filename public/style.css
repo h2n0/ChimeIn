@@ -12,7 +12,7 @@ body{
   background-color: var(--main-bg-color);
   color: white;
   font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;
-  font-size: 62.5%;
+  font-size: 75%;
 }
 
 
@@ -51,7 +51,6 @@ button.option{
   margin: 0 auto;
   margin-bottom: 3%;
   margin-left: 25%;
-  display: flex;
   border: none;
   color: var(--main-accent-color);
   cursor: pointer;
@@ -67,7 +66,7 @@ form#sessionForm{
   margin: 0 auto;
 }
 
-input.sessionID{
+input.largeText{
   display: block;
   width: 50%;
   border: none;
@@ -83,7 +82,7 @@ input.sessionID{
   outline: none;
 }
 
-input.sessionID.active{
+input.largeText.active{
   border-bottom: 2px solid var(--main-accent-color);
 }
 
@@ -258,7 +257,9 @@ img.logo{
 /* Modal Content/Box */
 .modalContent {
   color: black;
+  display: relative;
   background-color: #fefefe;
+  top: 5%;
   margin: var(--modal-vertical) auto; /* 15% from the top and centered */
   width: 300px; /* Could be more or less, depending on screen size */
   padding: var(--modal-padding);
@@ -269,6 +270,10 @@ img.logo{
 
 .modal:target {
   background-color: #FF00FF;
+}
+
+h1.tutCode{
+  font-size: 3.5em;
 }
 
 input[type='number'] {
@@ -306,7 +311,7 @@ div.roomInfo > p#humanCode{
     :root{
       --main-bg-color: #02182E;
       --modal-padding: 3%;
-      --modal-vertical: 25%;
+      --modal-vertical: 5%;
     }
 
     body{

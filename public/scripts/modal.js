@@ -80,10 +80,13 @@ function showAddTrack(track, callback){
     closeBox();
   }
 
+  let buttons = document.createElement("div");
+  buttons.appendChild(canBtn);
+  buttons.appendChild(addBtn);
+
   content.appendChild(img);
   content.appendChild(name);
-  content.appendChild(canBtn);
-  content.appendChild(addBtn);
+  content.appendChild(buttons);
 
   showBox(content);
 }

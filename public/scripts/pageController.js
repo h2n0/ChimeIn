@@ -241,6 +241,7 @@ window.onload = function(){
   searchBox.onkeydown = (e) => {
     if(e.keyCode != 13)return; // Press enter to search!
     let v = searchBox.value.trim();
+    searchBox.blur();
 
     if(v == "")return;
 
