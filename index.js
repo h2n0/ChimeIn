@@ -115,8 +115,6 @@ app.get("/isSession/:id", (req, res) => {
     isActive: sesh != null?sesh.canJoin: false
   }
 
-
-
   res.send(JSON.stringify(data));
 });
 

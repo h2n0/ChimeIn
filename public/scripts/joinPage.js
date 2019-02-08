@@ -86,6 +86,8 @@ function joinSession(id){
     return;
   }
 
+  console.log(id);
+
   let test = /([0-9]{3})/g
   let found = id.match(test);
   if(found){
