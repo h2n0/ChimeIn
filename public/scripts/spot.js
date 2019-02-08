@@ -17,6 +17,7 @@ function getNextAndPlay(callback){
       }, 1000 * 2);
     }else{// Something was in the queue so we are going to try and play it
       let j = JSON.parse(data);
+      console.log(j);
       let status = j.status
       let uri = j.id;
       if(status == 201){ // Song was recommended
