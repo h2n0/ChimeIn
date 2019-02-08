@@ -210,6 +210,10 @@ class ChimeSession{
     return this.active;
   }
 
+  canJoinNow(){
+    return this.canJoin;
+  }
+
   handleEvent(body){
     let user = body.guid;
 
