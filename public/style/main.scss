@@ -4,7 +4,7 @@ $elementSelect: lighten(adjust-hue($elementBase, -75deg), 5%);
 $accentColor: #ECB613;
 
 $modalPadding: 3%;
-$modalDrop: 25%;
+$modalDrop: 15%;
 
 $maxWidth: 80%; // Override in other files to make it all fit
 
@@ -15,9 +15,8 @@ body {
   font-size: 75%;
   overflow-x: hidden;
 }
-
 div.tabMain{
-  margin-top: 10%;
+  margin-top: 20%;
 }
 
 div.content{
