@@ -59,8 +59,9 @@ function showAddTrack(track, callback){
   name.style = "text-align: center;";
   name.innerHTML = track.name + "<br>" + track.artists[0].name;
 
-  let addBtn = document.createElement("div");
+  let addBtn = document.createElement("btn");
   addBtn.innerHTML = "Add to queue";
+  addBtn.classList.add("modalBtn");
 
   let sharedStyle = "width: 50%; text-align: center; cursor: pointer;"
   sharedStyle = sharedStyle + "padding-top: 10%; padding-bottom: 10%;";
@@ -71,8 +72,9 @@ function showAddTrack(track, callback){
     closeBox();
   }
 
-  let canBtn = document.createElement("div");
+  let canBtn = document.createElement("btn");
   canBtn.innerHTML = "Cancel";
+  canBtn.classList.add("modalBtn");
   //canBtn.style = "float: right;" + sharedStyle + "background-color: " + declineColor + ";";
   canBtn.style = "float: right; {} background-color: {};".format(sharedStyle, declineColor);
   canBtn.onclick = (e) => {

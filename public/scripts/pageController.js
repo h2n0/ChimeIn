@@ -62,6 +62,8 @@ function updateQueue(guid){
   let q = document.getElementById("queue");
   let hq = document.getElementById("qHead").children[0];
 
+  let qIcon = document.getElementById("qIcon");
+
   post("/queue/human", makePostObject(), (err, tracks) => {
     if(err){
       return;
@@ -70,6 +72,12 @@ function updateQueue(guid){
     let numTracks = tracks != null ? tracks.length : 0;
     let qc = q.childNodes.length;
     let children = q.childNodes;
+
+    if(numTracks <= 2){
+      qIcon.classList.add("lowSongs");
+    }else{
+      qIcon.classList.remove("lowSongs");
+    }
 
     if(numTracks <= qc){ // Queue size is smaller than it was before
                          // So edit existing ones then delete the exesss

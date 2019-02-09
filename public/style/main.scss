@@ -1,32 +1,49 @@
+$mainColor: #02182E;
+$elementBase: #001145;
+$elementSelect: lighten(adjust-hue($elementBase, -75deg), 5%);
+$accentColor: #ECB613;
 
-/* Used for house keeping */
-:root{
-  --main-bg-color: #02182E;
-  --main-accent-color : #ECB613;
+$modalPadding: 3%;
+$modalDrop: 25%;
 
+$maxWidth: 80%; // Override in other files to make it all fit
 
-  --modal-padding: 2%;
-  --modal-vertical: calc((50% - 170px) / 3);
-}
-body{
-  background-color: var(--main-bg-color);
+body {
+  background-color:  $mainColor;
   color: white;
   font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;
   font-size: 75%;
+  overflow-x: hidden;
 }
 
+div.tabMain{
+  margin-top: 10%;
+}
 
+div.content{
+  margin: 0 auto;
+  display: grid;
+  min-height: 300px;
+  grid-template-rows: 350px auto;
+}
+
+div.title{
+  margin: 0 auto;
+  a {
+    img{
+      display: block;
+      margin: 0 auto;
+    }
+  }
+  margin-bottom: 5%;
+}
 
 a{
-  color: var(--main-accent-color);
-}
-
-a.title{
-  text-decoration: none;
+  color: $accentColor;
 }
 
 h1{
-  color: #ECB613;
+  color: $accentColor;
   font-size: 4em;
 }
 
@@ -35,15 +52,8 @@ div.partyOptions{
   margin: 0 auto;
 }
 
-div.title{
-  width: 100%;
-  height: 10vm;
-  text-align: center;
-}
-
 button.option{
   width: 50%;
-  height: 12%;
   background-color: #C00;
   float: left;
   border-radius: 10px;
@@ -52,8 +62,9 @@ button.option{
   margin-bottom: 3%;
   margin-left: 25%;
   border: none;
-  color: var(--main-accent-color);
+  color: $accentColor;
   cursor: pointer;
+  padding: 3%;
 }
 
 button.option p{
@@ -64,6 +75,11 @@ button.option p{
 form#sessionForm{
   width: 50%;
   margin: 0 auto;
+}
+
+
+button.modalBtn{
+  width: 50%;
 }
 
 input.largeText{
@@ -83,7 +99,7 @@ input.largeText{
 }
 
 input.largeText.active{
-  border-bottom: 2px solid var(--main-accent-color);
+  border-bottom: 2px solid $accentColor;
 }
 
 p.sessionID {
@@ -91,7 +107,7 @@ p.sessionID {
     width: 50%;
     border: none;
     background-color: inherit;
-    border-bottom: 2px solid var(--main-accent-color);
+    border-bottom: 2px solid $accentColor;
     text-align: center;
     color: white;
     margin: 0 auto;
@@ -121,14 +137,14 @@ div.tab{
   text-align: center;
   float: left;
   cursor: pointer;
-  background-color: #004387;
+  background-color: $elementBase;
   border-radius: 10px;
 }
 
 .tabs > div{
   display: inline-block;
   width: 33.33%;
-  background-color: #001145;
+  background-color: $elementBase;
   border: none;
   color: inherit;
   font: inherit;
@@ -145,12 +161,12 @@ p#noSongs {
 }
 
 .tabs div.active{
-  background-color: #003B39;
+  background-color: $elementSelect;
 }
 
 
 .tabContainer{
-  background-color: #003B39;
+  background-color: $elementSelect;
 }
 
 .tabContainer div{
@@ -231,10 +247,6 @@ div.spot p {
   transition: all 1s;
 }
 
-img.logo{
-  padding-bottom: 5%;
-}
-
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
@@ -260,10 +272,10 @@ img.logo{
   display: relative;
   background-color: #fefefe;
   top: 5%;
-  margin: var(--modal-vertical) auto; /* 15% from the top and centered */
+  margin: $modalDrop auto; /* 15% from the top and centered */
   width: 300px; /* Could be more or less, depending on screen size */
-  padding: var(--modal-padding);
-  padding-bottom: calc(71px + var(--modal-padding)); /* 71px for height of buttons */
+  padding: $modalPadding;
+  padding-bottom: calc(71px + $modalPadding); /* 71px for height of buttons */
   border-radius: 15px;
   transition: all 0.5s ease-in-out;
 }
@@ -297,7 +309,7 @@ div.roomInfo {
   font-size: 2em;
   text-align: center;
   font-weight: bold;
-  color: var(--main-accent-color);
+  color: $accentColor;
 }
 
 div.roomInfo > p#humanCode{
@@ -305,125 +317,9 @@ div.roomInfo > p#humanCode{
   cursor: pointer;
 }
 
+
+
+
 @media only screen and (max-width: 600px) {
-
-    /* Used for house keeping */
-    :root{
-      --main-bg-color: #02182E;
-      --modal-padding: 3%;
-      --modal-vertical: 5%;
-    }
-
-    body{
-      margin: 0;
-    }
-
-    div.content{
-      width: 100%;
-    }
-
-    div.tabContainer{
-      width: 100%;
-    }
-
-    div.tabContainer input{
-      width: 100%;
-    }
-
-    ul#q{
-      width: 100%;
-      padding-left: 0;
-    }
-
-    ul#q li{
-      width: 100%;
-    }
-
-    img.logo{
-      padding-bottom: 10%;
-      padding-top: 5%;
-    }
-
-    input.sessionID{
-      width: 75%;
-    }
-
-    button.option{
-      width: 70%;
-      margin-bottom: 3%;
-      margin-left: 15%;
-    }
-
-    .noMobile{
-      display: none;
-    }
-
-    .noDesktop{
-      display: inherit;
-    }
-
-
-
-
-    @-moz-keyframes flash {
-      from{
-        filter: none;
-      }
-
-      to{
-        filter: invert(1) hue-rotate(120deg);
-      }
-    }
-
-    @-webkit-keyframes flash {
-      from{
-        filter: none;
-      }
-
-      to{
-        filter: invert(1) hue-rotate(120deg);
-      }
-    }
-
-    @-ms-keyframes flash {
-      from{
-        filter: none;
-      }
-
-      to{
-        filter: invert(1) hue-rotate(120deg);
-      }
-    }
-
-    @-o-keyframes flash {
-      from{
-        filter: none;
-      }
-
-      to{
-        filter: invert(1) hue-rotate(120deg);
-      }
-    }
-
-    @keyframes flash {
-      0%{
-        filter: none;
-      }
-
-      50%{
-        filter: invert(0.5) hue-rotate(120deg);
-      }
-
-      100%{
-        filter: invert(1) hue-rotate(120deg);
-      }
-    }
-
-    .lowSongs{
-      -webkit-animation: flash 0.2s linear infinite alternate;
-      -moz-animation: flash 0.2s linear infinite alternate;
-      -ms-animation: flash 0.2s linear infinite alternate;
-      -o-animation: flash 0.2s linear infinite alternate;
-      animation: flash 0.2s linear infinite alternate; /* this comes last */
-    }
+  @import "mobile.scss";
 }

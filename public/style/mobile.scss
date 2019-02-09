@@ -1,0 +1,56 @@
+$maxWidth: 100%;
+
+body{
+  margin: 0;
+}
+
+input.largeText{
+  width: 90%;
+  height: 10%;
+}
+
+div.content{
+  width: 100%;
+  display: inline-grid;
+  height: 50%;
+}
+
+div.tabContainer{
+  width: 100%;
+}
+
+div.tabContainer input{
+  width: 100%;
+}
+
+ul#q{
+  width: 100%;
+  padding-left: 0;
+}
+
+ul#q li{
+  width: 100%;
+}
+
+img.logo{
+  padding-bottom: 10%;
+  padding-top: 5%;
+}
+
+input.sessionID{
+  width: 75%;
+}
+
+button.option{
+  width: 70%;
+  margin-bottom: 3%;
+  margin-left: 15%;
+}
+
+.noMobile{
+  display: none;
+}
+
+.noDesktop{
+  display: inherit;
+}

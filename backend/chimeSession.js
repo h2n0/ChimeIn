@@ -128,10 +128,11 @@ class ChimeSession{
       let recData = {
         min_energy: 0.4,
         seed_tracks: this.reccs.getQueue(),
-        min_populatiry: 50
+        min_populatiry: 50,
+        market: this.country
       };
 
-      spotify.getRecommendations(recData, {market: this.country}, (err,data) => {
+      spotify.getRecommendations(recData, (err,data) => {
         if(err){
           console.error(err.statusCode);
           console.log("Error?");

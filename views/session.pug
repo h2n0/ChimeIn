@@ -26,31 +26,32 @@ block content
       img(src="/assets/connect.png", id="playing", style="display:block; margin: auto;")
       p(style="text-align: center; font-size: 1.8em", id="NAT") Song name
 
-  div.tabs
-    div(onclick="openTab(0)", id="qHead").active
-      p.noMobile Queue
-      img.noDesktop(src="/assets/queue.svg")
-    div(onclick="openTab(1)")
-      p.noMobile Search
-      img.noDesktop(src="/assets/search.svg")
-    div(onclick="openTab(2)")
-      p.noMobile Room
-      img.noDesktop(src="/assets/room.svg")
 
+  div.tabMain
+    div.tabs
+      div(onclick="openTab(0)", id="qHead").active
+        p.noMobile Queue
+        img.noDesktop(id="qIcon", src="/assets/queue.svg")
+      div(onclick="openTab(1)")
+        p.noMobile Search
+        img.noDesktop(src="/assets/search.svg")
+      div(onclick="openTab(2)")
+        p.noMobile Room
+        img.noDesktop(src="/assets/room.svg")
 
-  div.tabContainer(index=0)
-    div
-      p(id="noSongs").noSongs No songs in the queue
-      ul(id="queue")
+    div.tabContainer(index=0)
+      div
+        p(id="noSongs").noSongs No songs in the queue
+        ul(id="queue")
 
-  div.tabContainer.hidden(index=1)
-    div
-      input(id="songSearch", placeholder="Song name", type="search")
-      ul(id="q")
+    div.tabContainer.hidden(index=1)
+      div
+        input(id="songSearch", placeholder="Song name", type="search")
+        ul(id="q")
 
-  div.tabContainer.hidden(index=2)
-    div.roomInfo
-      p Room Number
-      p(id="humanCode")
-      //-div.leaveRoom
-      //-  p Leave Room
+    div.tabContainer.hidden(index=2)
+      div.roomInfo
+        p Room Number
+        p(id="humanCode")
+        //-div.leaveRoom
+        //-  p Leave Room
