@@ -4,7 +4,7 @@
   "description": "Group Spotify sessions",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "clear && sass --watch ./public/style/main.scss:./public/style/out.css & node index.js",
     "start": "clear && node index.js",
     "build": "./tools/./compress.sh"
   },
