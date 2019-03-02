@@ -5,7 +5,9 @@ function get(url, callback) {
       if(callback)callback(this.responseText)
     }
   };
+
   xhttp.open("GET", url, true);
+  xhttp.setRequestHeader("Access-Control-Allow-Origin","*");
   xhttp.send();
 }
 

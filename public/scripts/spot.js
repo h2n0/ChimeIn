@@ -63,7 +63,7 @@ function createPlayer(autoConnect){
   });
 
   player.addListener('authentication_error', ({ message }) => {
-    //createPlayer(true);
+    createPlayer(true);
   });
 
   // Playback status updates
@@ -118,6 +118,13 @@ function createPlayer(autoConnect){
   player.addListener('ready', ({ device_id }) => {
     console.log('Ready with Device ID', device_id);
     player.setName("Chime In: " + getHumanRoomCode());
+
+    if(autoConnect){
+      swapFromSpotToChime(globalToken, device_id, (a)=>{
+        console.log("Should have swapped");
+      });
+    }
+
     autoCheck(genID());
   });
 

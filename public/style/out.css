@@ -99,6 +99,15 @@ div.queueHider {
   width: 100%;
   font-size: 2em; }
 
+div#qrHolder {
+  margin: 0 auto;
+  padding: 2%;
+  width: 150px;
+  height: 150px;
+  background-color: #FFF;
+  border: 2px solid white;
+  border-radius: 10%; }
+
 div.tab {
   width: 50%;
   text-align: center;

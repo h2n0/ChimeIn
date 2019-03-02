@@ -283,6 +283,11 @@ window.onload = function(){
     });
   }
 
+  console.log("I");
+  let location = window.location.href;
+  let url = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+location;
+  document.getElementById("roomQr").src =  url;
+
   let room = getRoomCode();
   let realCode = room.substring(0,3) + "-" + room.substring(3,6) + "-" + room.substring(6,9);
   let humanCode = document.getElementById("humanCode");
