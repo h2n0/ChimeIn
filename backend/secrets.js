@@ -10,7 +10,7 @@ class Secrets {
   hideSercets(){
 
     this.get("/kettelSet", (req, res) => {
-      this.kettle = Date.now();
+      this.kettle = new Date();
       res.status(200).end();
     });
 
