@@ -13,6 +13,7 @@ let db = mysql.createConnection(config.sql);
 let currentSession = null;
 let sessions = [];
 let sessionIds = [];
+let Secrets = require("./backend/secrets.js");
 
 app.set('view engine', 'pug');
 app.use(express.static('./public'));
@@ -75,6 +76,10 @@ function genId(){
 function sendNull(res){
   res.send(JSON.stringify(null));
 }
+
+
+let s = new Secrets(app);
+s.hideSercets();
 
 app.get("/", (req, res) => {
   let min = config.minimisedScripts;
