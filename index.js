@@ -371,6 +371,21 @@ app.post("/session/data", (req,res) => {
 
 });
 
+app.get("/session/data/:room/:info", (req,res) =>{
+  let room = req.params.room;
+  let info = req.params.info;
+
+  if(!room || !info){
+    res.status(400).send("Missing room number or specific data")
+  }else{
+    if(changeToRoom(room)){
+      res.send(currentSession.getInfo(info));
+    }else{
+      sendNull(res);
+    }
+  }
+});
+
 app.post("/test", (req, res) => {
   console.log(req.body);
   res.status(200).end();

@@ -25,6 +25,7 @@ function showBox(content, options){
 
   document.body.appendChild(b);
   b.style.display = "block";
+  b.style.overflow = "hidden";
   box = b;
   popin();
 

@@ -12,14 +12,15 @@ block scripts
 
 block content
 
-  input(name="id", type="number", id="sessionId", pattern="[0-9]*", autocomplete="off", placeholder="Room Id").largeText
-  p(id="fake", style="display: none;").sessionID
+  div.pure-u
+    input(name="id", type="number", id="sessionId", pattern="[0-9]*", autocomplete="off", placeholder="Room Id").largeText
+    p(id="fake", style="display: none;").sessionID
 
-  div.partyOptions
-    a(id="create", style="cursor:pointer;")
-      button.option.noMobile.hostBtn(style="background-color:#1DB954;")
-        p(status=0) Host
+    div.partyOptions
+      a(id="create", style="cursor:pointer;")
+        button.option.noMobile.hostBtn(style="background-color:#1DB954;")
+          p(status=0) Host
 
-    a(id="join",style="cursor:pointer;")
-      button.option
-        p Join
+      a(id="join",style="cursor:pointer;")
+        button.option
+          p Join

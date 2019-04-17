@@ -1,3 +1,4 @@
+@import url(./pure.css);
 body {
   background-color: #02182E;
   color: white;
@@ -16,7 +17,7 @@ div.content {
 
 div.title {
   margin: 0 auto;
-  margin-bottom: 5%; }
+  margin-top: 2.5%; }
   div.title a img {
     display: block;
     margin: 0 auto; }
@@ -240,11 +241,12 @@ div.spot p {
   width: 300px;
   /* Could be more or less, depending on screen size */
   padding: 3%;
-  padding-bottom: calc(71px + $modalPadding);
+  padding-bottom: calc(150px + $modalPadding);
   /* 71px for height of buttons */
   border-radius: 15px;
   transition: all 0.5s ease-in-out; }
 
+l
 .modal:target {
   background-color: #FF00FF; }
 
@@ -279,8 +281,7 @@ div.roomInfo > p#humanCode {
     margin: 0; }
 
   input.largeText {
-    width: 90%;
-    height: 10%; }
+    width: 90%; }
 
   div.content {
     width: 100%;
@@ -305,7 +306,8 @@ div.roomInfo > p#humanCode {
     padding-top: 5%; }
 
   input.sessionID {
-    width: 75%; }
+    width: 75%;
+    height: 300px; }
 
   button.option {
     width: 70%;

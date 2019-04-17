@@ -1,3 +1,6 @@
+@import "./pure.css";
+
+
 $mainColor: #02182E;
 $elementBase: #001145;
 $elementSelect: lighten(adjust-hue($elementBase, -75deg), 5%);
@@ -34,7 +37,7 @@ div.title{
       margin: 0 auto;
     }
   }
-  margin-bottom: 5%;
+  margin-top: 2.5%;
 }
 
 a{
@@ -284,10 +287,10 @@ div.spot p {
   margin: $modalDrop auto; /* 15% from the top and centered */
   width: 300px; /* Could be more or less, depending on screen size */
   padding: $modalPadding;
-  padding-bottom: calc(71px + $modalPadding); /* 71px for height of buttons */
+  padding-bottom: calc(150px + $modalPadding); /* 71px for height of buttons */
   border-radius: 15px;
   transition: all 0.5s ease-in-out;
-}
+}l
 
 .modal:target {
   background-color: #FF00FF;

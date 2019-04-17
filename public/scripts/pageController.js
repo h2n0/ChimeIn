@@ -241,6 +241,8 @@ function copyText(text){
 }
 
 
+let worker = null;
+
 window.onload = function(){
   let searchBox = document.getElementById("songSearch");
   let list = document.getElementById("q");
@@ -283,7 +285,6 @@ window.onload = function(){
     });
   }
 
-  console.log("I");
   let location = window.location.href;
   let url = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+location;
   document.getElementById("roomQr").src =  url;
@@ -298,18 +299,59 @@ window.onload = function(){
     copyText("http://chimein.live/session/" + room);
   };
 
+  setInterval(()=>{
+    let dom = document.getElementById("numPeople");
+    get("/session/data/"+room+"/members", (data)=>{
+      let d = JSON.parse(data);
+
+      dom.innerHTML = d.members;
+    });
+  }, 5000);
+
 
 
   let obj = {
     "event": "joining"
   }
-  //post("/session/data", makePostObject(obj));
+  post("/session/data", makePostObject(obj));
+
+  if(window.Worker){ // We can implement a background worker
+    worker = new Worker("/scripts/worker.js");
+
+    worker.onmessage = (e) => {
+      console.log(e.data);
+    };
+
+    worker.onerror = (e) => {
+      console.log(e);
+    };
+  }
+}
+
+window.onfocus = () =>{
+  if(worker){
+    setWorkerStat(false);
+  }
 }
 
 
-window.onbeforeunload = function(){
+window.onblur = () => {
+  if(worker){
+    setWorkerStat(true);
+  }
+}
+
+function setWorkerStat(on){
+  on = on || false;
+  if(worker){
+    let data = {"room": getRoomCode(), "guid": genID(), "on": on};
+    worker.postMessage(JSON.stringify(data));
+  }
+}
+
+window.onbeforeunload = (e) => {
   let obj = {
     "event": "leaving"
   }
   post("/session/data", makePostObject(obj));
-}
+};

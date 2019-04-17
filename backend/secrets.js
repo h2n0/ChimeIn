@@ -21,7 +21,6 @@ class Secrets {
 
 
   get(route, f){
-    console.log(route);
     this.server.get(this.base + route, (req, res) => {
       f(req, res);
     });

@@ -16,6 +16,25 @@ instructions.innerHTML = "Connect to the ChimeIn session with this room id";
 connectBox.appendChild(instructions);
 
 
+let cancelButton = document.createElement("button");
+cancelButton.classList.add("option");
+cancelButton.innerHTML = "Canel";
+
+cancelButton.onclick = (e) => {
+
+  let seshInfo = {
+    "event" : "closing"
+  }
+
+  post("/session/data", makePostObject(seshInfo), (err,data) =>{
+    window.location = "https://chimein.live";
+  });
+
+};
+
+connectBox.appendChild(cancelButton);
+
+
 window.addEventListener("load", (e) => {
   details.innerHTML = getHumanRoomCode();
   tutStep();

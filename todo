@@ -1,14 +1,71 @@
 # Chimein todo
-- first song added isn't actually added [X]
-- recomendation 429 error code, too many requests [X]
-- Sort out real sessions [X]
-- Convert all get's to post's [X]
-- Fix bugs [-]
-- "Gamification DB" [-]
-- Start API [ ]
-- Mobile [ ]
-- Ads [ ]
+
+# On going issues
+- Fix bugs
+- "Gamification DB"
+- Start API
+- Mobile App
+
+# Fixed issues
+# Issue (Fix, date) [Status]
+- first song added isn't actually added (Queue placement error, 12th Dec 2018)
+- recommendation 429 error code (Too many requests, 16th Dec 2018)
+- Sort out real sessions (N/A, 21st Dec 2018)
+- Convert all get's to post's
 
 
-## Chimein maybes
-- User specific song removal (semi-done)
+
+
+# Dev log
+
+# 8th April 2019
+Getting around to finally working on user interaction with sessions
+
+# 2nd March 2019
+QR code on rooms for fast mobile joining
+
+^^^^^^^^^^^^^
+
+Set up server to auto update
+Applied HTTPS cert to server
+
+VVVVVVVVVVVVV
+
+# 9th Feb 2019
+Started using SASS
+
+# 28th Jan 2019
+Added mobile art work to the tabs on the session page
+
+# 26th Jan 2019
+Tweaked the landing page for error handling
+Uglified and minimised javascript
+
+# 22nd Jan 2019
+Sessions can now get new auth creds from server
+
+# 14th Jan 2019
+Started working on a more mobile friendly site
+
+# 8th Jan 2019
+Limited the number of songs users can have in a row to 5
+
+# 31st December 2018
+This would be considered a working alpha of ChimeIn
+
+# 30th December 2018
+Pushed to Github
+Started working on user interaction with sessions
+
+# 21st December 2018
+Setup git hub
+Managed to get Spotify to refresh tokens
+
+# 20th November 2018
+Can finally play through device
+
+# 18th November 2018
+Can sign in to Spotify and add songs, can't play them yet
+
+# 13th November 2018 (Best guess)
+Started working on Chime In

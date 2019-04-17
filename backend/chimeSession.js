@@ -1,6 +1,7 @@
 const AutoTrack = require("./autotrack.js");
 const Session = require("./session.js");
 const ChimeResponse = require("./response.js");
+const User = require("./user.js");
 
 
 // First song to ever be played over the internet
@@ -21,6 +22,7 @@ class ChimeSession{
     this.songsPlayed = 0;
     this.country = country || "US";
     this.canJoin = false;
+    this.canDeleteSession = false;
     console.log("New session #" + id + " from " + country);
   }
 
@@ -217,18 +219,15 @@ class ChimeSession{
 
   handleEvent(body){
     let user = body.guid;
-
     let event = body.data.event;
-
     if(event == "leaving"){ // User left session
       for(let i = 0; i < this.users.length; i++){
-        if(this.users[i] == user){
+        if(this.users[i].id == user){
           this.users.splice(i,1);
         }
 
         for(let j = 0; j < this.queue.length;){
           let c = this.queue[j];
-
           if(c.pusher == user){
             this.queue.splice(j, 1);
           }else{
@@ -237,10 +236,33 @@ class ChimeSession{
         }
       }
     }else if(event == "joining"){ // User joined session
-      this.users.push(user);
+      for(let i = 0; i < this.users.length; i++){
+        if(this.users[i].id == user)return;
+      }
+      this.users.push(new User(user));
     }else if(event == "endTut"){ // Host has completed the tutorial
       this.canJoin = true;
+    }else if(event == "ping"){
+      for(let i = 0; i < this.users.length; i++){
+        if(this.users[i].id == user){
+          this.users[i].ping();
+          break;
+        }
+      }
+    }else if(event == "closing"){ // Session closed before it could start
+      this.canDeleteSession = true;
+      this.canJoin = false;
     }
+  }
+
+  getInfo(info){
+    let out = null;
+
+    if(info == "members"){
+      out = {"members": this.users.length, "active": this.getNumberOfActiveUsers() }
+    }
+
+    return JSON.stringify(out);
   }
 
   getSongsBy(guid){
@@ -254,6 +276,52 @@ class ChimeSession{
       }
     }
     return amt;
+  }
+
+
+  moreThanAnHour(d1, d2){
+    let diff = d1 - d2;
+    let dDay = new Date(diff);
+    return dDay.getHours() >= 1 || (dDay.getDate() - 1) > 0;
+  }
+
+
+  getNumberOfActiveUsers(){
+    let d = new Date();
+    let out = 0;
+    for(let i = 0; i < this.users.length; i++){
+      let d2 = this.users[i].getLastActive();
+      if(!this.moreThanAnHour(d, d2)){
+        out++;
+      }
+    }
+    return out;
+  }
+
+
+  // Shall be called every hour that the sesison is active
+  hourCheck(){
+
+    let now = new Date();
+
+    // No users so just remove it
+    if(this.users.length == 0){
+      this.canDeleteSession = true;
+      return;
+    }
+
+    let anyoneActive = false;
+
+    for(let i = 0; i < this.users.length; i++){
+      if(!moreThanAnHour(now, this.users[i].getLastActive())){
+        anyoneActive = true;
+        break;
+      }
+    }
+
+    if(!anyoneActive){
+      this.canDeleteSession = true;
+    }
   }
 
 }
