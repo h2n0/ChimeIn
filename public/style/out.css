@@ -47,6 +47,14 @@ button.option {
   cursor: pointer;
   padding: 3%; }
 
+p.footer {
+  text-align: center;
+  width: 150px;
+  font-size: 2em;
+  position: fixed;
+  right: 10px;
+  bottom: 0px; }
+
 button.option p {
   margin: auto;
   text-align: center; }

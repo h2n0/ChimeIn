@@ -4,7 +4,7 @@
   "description": "Group Spotify sessions",
   "main": "index.js",
   "scripts": {
-    "test": "clear && sass --watch ./public/style/main.scss:./public/style/out.css & node index.js",
+    "test": "clear && ip addr show | grep -E \"192.168.0.*\" | awk '{print $2}' | awk -F/ '{print $1}' & sass --watch ./public/style/main.scss:./public/style/out.css & node index.js",
     "start": "clear && node index.js",
     "build": "./tools/./compress.sh"
   },

@@ -85,9 +85,10 @@ app.get("/", (req, res) => {
   let min = config.minimisedScripts;
   let scriptLoc = min?"/scripts/min":"/scripts";
   let scriptEnd = min?".min.js":".js";
+  let versionNumber = (config.buildNumber?config.buildNumber:"XXX") + " - " + (min?"prod":"dev")
   req.session = null;
   res.clearCookie("sessionHost", {path:"/session/"});
-  res.render("index", {scripts: scriptLoc, scriptEnding: scriptEnd, user: req.cookies.spotName, canHost: req.cookies.spotPremium});
+  res.render("index", {scripts: scriptLoc, scriptEnding: scriptEnd, user: req.cookies.spotName, canHost: req.cookies.spotPremium, buildNumber: versionNumber});
 });
 
 app.get("/about", (req, res) =>{
