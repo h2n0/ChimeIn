@@ -1,41 +1,45 @@
-@import url(./pure.css);
+@import "./pure.css";
 body {
   background-color: #02182E;
   color: white;
-  font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;
+  font-family: Courier New, Courier, Lucida Sans Typewriter, Lucida Typewriter, monospace;
   font-size: 75%;
-  overflow-x: hidden; }
-
-input{
-	color:black;
+  overflow-x: hidden;
 }
 
 div.tabMain {
-  margin-top: 20%; }
+  margin-top: 20%;
+}
 
 div.content {
   margin: 0 auto;
   display: grid;
   min-height: 300px;
-  grid-template-rows: 350px auto; }
+  grid-template-rows: 350px auto;
+}
 
 div.title {
   margin: 0 auto;
-  margin-top: 2.5%; }
-  div.title a img {
-    display: block;
-    margin: 0 auto; }
+  margin-top: 2.5%;
+}
+div.title a img {
+  display: block;
+  margin: 0 auto;
+}
 
 a {
-  color: #ECB613; }
+  color: #ECB613;
+}
 
 h1 {
   color: #ECB613;
-  font-size: 4em; }
+  font-size: 4em;
+}
 
 div.partyOptions {
   width: 50%;
-  margin: 0 auto; }
+  margin: 0 auto;
+}
 
 button.option {
   width: 50%;
@@ -49,7 +53,8 @@ button.option {
   border: none;
   color: #ECB613;
   cursor: pointer;
-  padding: 3%; }
+  padding: 3%;
+}
 
 p.footer {
   text-align: center;
@@ -57,18 +62,22 @@ p.footer {
   font-size: 2em;
   position: fixed;
   right: 10px;
-  bottom: 0px; }
+  bottom: 0px;
+}
 
 button.option p {
   margin: auto;
-  text-align: center; }
+  text-align: center;
+}
 
 form#sessionForm {
   width: 50%;
-  margin: 0 auto; }
+  margin: 0 auto;
+}
 
 button.modalBtn {
-  width: 50%; }
+  width: 50%;
+}
 
 input.largeText {
   display: block;
@@ -83,10 +92,12 @@ input.largeText {
   padding-top: 15%;
   margin-bottom: 5%;
   transition: border 0.25s ease-in-out;
-  outline: none; }
+  outline: none;
+}
 
 input.largeText.active {
-  border-bottom: 2px solid #ECB613; }
+  border-bottom: 2px solid #ECB613;
+}
 
 p.sessionID {
   display: block;
@@ -99,18 +110,22 @@ p.sessionID {
   margin: 0 auto;
   font-size: 5em;
   padding-top: 15%;
-  margin-bottom: 5%; }
+  margin-bottom: 5%;
+}
 
 a:visited {
-  color: inherit; }
+  color: inherit;
+}
 
 div.content {
   width: 75%;
-  margin: 0 auto; }
+  margin: 0 auto;
+}
 
 div.queueHider {
   width: 100%;
-  font-size: 2em; }
+  font-size: 2em;
+}
 
 div#qrHolder {
   margin: 0 auto;
@@ -119,7 +134,8 @@ div#qrHolder {
   height: 150px;
   background-color: #FFF;
   border: 2px solid white;
-  border-radius: 10%; }
+  border-radius: 10%;
+}
 
 div.tab {
   width: 50%;
@@ -127,7 +143,8 @@ div.tab {
   float: left;
   cursor: pointer;
   background-color: #001145;
-  border-radius: 10px; }
+  border-radius: 10px;
+}
 
 .tabs > div {
   display: inline-block;
@@ -140,32 +157,40 @@ div.tab {
   cursor: pointer;
   padding-top: 2%;
   padding-bottom: 2%;
-  text-align: center; }
+  text-align: center;
+}
 
 p#noSongs {
   text-align: center;
-  font-size: 2em; }
+  font-size: 2em;
+}
 
 .tabs div.active {
-  background-color: #005f30; }
+  background-color: #005f30;
+}
 
 .tabContainer {
-  background-color: #005f30; }
+  background-color: #005f30;
+}
 
 .tabContainer div {
-  padding: 5%; }
+  padding: 5%;
+}
 
 .hidden {
-  display: none; }
+  display: none;
+}
 
 ul {
   padding: 0px;
-  list-style: none; }
+  list-style: none;
+}
 
 ul li {
   display: inline-block;
   width: 100%;
-  overflow: hidden; }
+  overflow: hidden;
+}
 
 li.queueItem {
   display: grid;
@@ -173,14 +198,16 @@ li.queueItem {
   height: 64px;
   margin-bottom: 2%;
   grid-template-columns: 64px 70% 40px;
-  grid-template-rows: auto; }
+  grid-template-rows: auto;
+}
 
 li.queueItem p {
   text-align: center;
   margin-top: auto;
   margin-bottom: auto;
   padding-left: 5%;
-  padding-right: 5%; }
+  padding-right: 5%;
+}
 
 li.searchItem {
   display: grid;
@@ -189,16 +216,19 @@ li.searchItem {
   height: 64px;
   margin-bottom: 2%;
   grid-template-columns: 64px auto;
-  grid-template-rows: auto; }
+  grid-template-rows: auto;
+}
 
 li.searchItem img {
   float: left;
-  width: 64px; }
+  width: 64px;
+}
 
 li.searchItem p {
   margin-left: 5%;
   text-align: center;
-  line-height: 44px; }
+  line-height: 44px;
+}
 
 div.spot {
   width: 20px;
@@ -211,12 +241,14 @@ div.spot {
   text-align: center;
   background-color: #ECB613;
   border-radius: 50%;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 div.spot p {
   position: relative;
   font-size: 2em;
-  transition: all 1s; }
+  transition: all 1s;
+}
 
 .modal {
   display: none;
@@ -237,10 +269,12 @@ div.spot p {
   background-color: black;
   /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4);
-  /* Black w/ opacity */ }
+  /* Black w/ opacity */
+}
 
 .noDesktop {
-  display: none; }
+  display: none;
+}
 
 /* Modal Content/Box */
 .modalContent {
@@ -256,80 +290,100 @@ div.spot p {
   padding-bottom: calc(150px + $modalPadding);
   /* 71px for height of buttons */
   border-radius: 15px;
-  transition: all 0.5s ease-in-out; }
+  transition: all 0.5s ease-in-out;
+}
 
-l
-.modal:target {
-  background-color: #FF00FF; }
+l .modal:target {
+  background-color: #FF00FF;
+}
 
 h1.tutCode {
-  font-size: 3.5em; }
+  font-size: 3.5em;
+}
 
-input[type='number'] {
-  -moz-appearance: textfield; }
+input[type=number] {
+  -moz-appearance: textfield;
+}
 
 /* Webkit browsers like Safari and Chrome */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
-  margin: 0; }
+  margin: 0;
+}
 
 div.indexOption {
   width: 100px;
-  height: 50px; }
+  height: 50px;
+}
 
 div.roomInfo {
   font-size: 2em;
   text-align: center;
   font-weight: bold;
-  color: #ECB613; }
+  color: #ECB613;
+}
 
 div.roomInfo > p#humanCode {
   font-size: 1.5em;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 @media only screen and (max-width: 600px) {
   body {
-    margin: 0; }
+    margin: 0;
+  }
 
   input.largeText {
-    width: 90%; }
+    width: 90%;
+  }
 
   div.content {
     width: 100%;
     display: inline-grid;
-    height: 50%; }
+    height: 50%;
+  }
 
   div.tabContainer {
-    width: 100%; }
+    width: 100%;
+  }
 
   div.tabContainer input {
-    width: 100%; }
+    width: 100%;
+  }
 
   ul#q {
     width: 100%;
-    padding-left: 0; }
+    padding-left: 0;
+  }
 
   ul#q li {
-    width: 100%; }
+    width: 100%;
+  }
 
   img.logo {
     padding-bottom: 10%;
-    padding-top: 5%; }
+    padding-top: 5%;
+  }
 
   input.sessionID {
     width: 75%;
-    height: 300px; }
+    height: 300px;
+  }
 
   button.option {
     width: 70%;
     margin-bottom: 3%;
-    margin-left: 15%; }
+    margin-left: 15%;
+  }
 
   .noMobile {
-    display: none; }
+    display: none;
+  }
 
   .noDesktop {
-    display: inherit; } }
+    display: inherit;
+  }
+}
 
-/*# sourceMappingURL=out.css.map */
+/*# sourceMappingURL=style.out.css.map */
