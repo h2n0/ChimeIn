@@ -69,7 +69,6 @@ function tutStep(e){
               console.error("Oh no");
             }else{
               this.canJoin = true;
-              storeInfo("session", getRoomCode())
             }
           });
         });
