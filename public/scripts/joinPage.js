@@ -6,6 +6,18 @@ window.onload = function(){
   let host = document.getElementById("create");
   let idContainer = document.getElementById("sessionId");
 
+  let code = getInfo("session");
+  if(code){
+    let p = "Looks like you've been here before, would you like to join your last session?"
+    showYesNoDialog("Welcome back", p, (option)=>{
+      if(option){
+        joinSession(code);
+      }else{
+        removeInfo("session");
+      }
+    });
+  }
+
   let status = host.children[0].children[0].getAttribute("status");
   if(status == 0){
     let newUrl = "/host";
@@ -46,7 +58,7 @@ window.onload = function(){
       return;
     }
 
-    joinSession(stripInput(v));
+    joinSession(stripInput(idContainer.value.trim()));
   }
 }
 

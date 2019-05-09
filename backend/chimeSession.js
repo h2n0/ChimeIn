@@ -17,6 +17,7 @@ class ChimeSession{
     this.currentId = null;
     this.currentData = null;
     this.currentHumanQueue = null;
+    this.currentPusher = 0;
     this.sessionHandler = new Session();
     this.isActive = false;
     this.songsPlayed = 0;
@@ -75,7 +76,8 @@ class ChimeSession{
     }else{ // Is set so we just need to find out the info we need
       let id = this.currentId.split(":");
       id = id[id.length-1];
-      this.reccs.addElement(id);
+
+      if(this.currentPusher != -1)this.reccs.addElement(id);
 
       spotify.getTrack(id, {market: this.country}, (err,data) => {
         if(err){
@@ -122,6 +124,7 @@ class ChimeSession{
 
     if(nextInQueue){
       this.currentId = nextInQueue.id;
+      this.currentPusher = nextInQueue.pusher;
       resp.id = this.currentId;
       resp.status = 200;
       resp.pushedBy = nextInQueue.pusher;

@@ -349,6 +349,14 @@ function setWorkerStat(on){
   }
 }
 
+function notHost(){
+  let code = getRoomCode();
+  storeInfo("session", code);
+  if(getInfo("session") == null){
+    console.log("ERROR!!!");
+  }
+}
+
 window.onbeforeunload = (e) => {
   let obj = {
     "event": "leaving"
