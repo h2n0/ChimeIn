@@ -159,49 +159,6 @@ function showHoldUp(){
   showBox(cont);
 }
 
-
-function showYesNoDialog(title, inner, callback){
-  let content = document.createElement("div");
-  let header = document.createElement("h1");
-  header.innerHTML = title;
-  header.style = "text-align: center";
-
-  let p = document.createElement("p");
-  p.innerHTML = inner;
-  p.style = "font-size: 1.5em; text-align: center;";
-  content.appendChild(header);
-  content.appendChild(p);
-
-  let addBtn = document.createElement("btn");
-  addBtn.innerHTML = "Yes";
-  addBtn.classList.add("modalBtn");
-
-  let sharedStyle = "width: 50%; text-align: center; cursor: pointer;"
-  sharedStyle = sharedStyle + "padding-top: 10%; padding-bottom: 10%;";
-  addBtn.style = "float: left;" + sharedStyle + "background-color: #9F9;";
-
-  addBtn.onclick = (e) => {
-    if(callback)callback(true);
-    closeBox();
-  }
-
-  let canBtn = document.createElement("btn");
-  canBtn.innerHTML = "No";
-  canBtn.classList.add("modalBtn");
-  canBtn.style = "float: right; {} background-color: {};".format(sharedStyle, "F99");
-  canBtn.onclick = (e) => {
-    if(callback)callback(false);
-    closeBox();
-  }
-
-  let buttons = document.createElement("div");
-  buttons.appendChild(canBtn);
-  buttons.appendChild(addBtn);
-
-  content.appendChild(buttons);
-  showBox(content);
-}
-
 function showOkayDialog(title, inner){
 
   let content = document.createElement("div");

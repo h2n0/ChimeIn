@@ -6,7 +6,6 @@ block scripts
   script(src= scripts + "/cookies" + scriptEnding, type="application/javascript")
   script(src= scripts + "/ajax" + scriptEnding, type="application/javascript")
   script(src= scripts + "/guest" + scriptEnding, type="application/javascript")
-  script(src= scripts + "/storage" + scriptEnding, type="application/javascript")
   script(src= scripts + "/modal" + scriptEnding, type="application/javascript")
   script(src= scripts + "/pageController" + scriptEnding, type="application/javascript")
   script(src= scripts + "/spot" + scriptEnding, type="application/javascript")
@@ -18,7 +17,6 @@ block scripts
     script.
       window.addEventListener("load", (e) => {
         autoCheck(genID());
-        notHost();
       });
 
 block content
