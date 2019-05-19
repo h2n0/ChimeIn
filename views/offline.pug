@@ -1,0 +1,18 @@
+extends base.pug
+
+
+block scripts
+  script(src= scripts + "/ajax" + scriptEnding, type="application/javascript")
+  script(src= scripts + "/valid" + scriptEnding, type="application/javascript")
+  script(src= scripts + "/cookies" + scriptEnding, type="application/javascript")
+  script(src= scripts + "/joinPage" + scriptEnding, type="application/javascript")
+  script(src= scripts + "/modal" + scriptEnding, type="application/javascript")
+  script(src= scripts + "/understudy" + scriptEnding, type="application/javascript")
+
+
+block content
+
+  div.pure-u
+    h1(style="text-align: center; margin-top: 10%;") Offline
+    p(style="text-align: center; font-size: 1.7em;") Looks like your offline at the moment
+    p(style="text-align: center; font-size: 1.7em;") Please try again soon 

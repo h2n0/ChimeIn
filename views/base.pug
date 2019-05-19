@@ -3,7 +3,8 @@ html
     title ChimeIn
     link(rel="stylesheet", href="/style/out.css", type='text/css')
     meta(name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale=1.0, user-scalable=no")
-    block scripts
+    meta(name="theme-color" content="#ECB613")
+    link(rel="manifest", href="/manifest.json")
 
   body
     div.title
@@ -11,3 +12,6 @@ html
         img(src="/assets/logo.svg").logo
     div.content
       block content
+
+
+    block scripts

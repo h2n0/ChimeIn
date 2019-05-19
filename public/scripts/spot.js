@@ -114,8 +114,12 @@ function createPlayer(autoConnect){
     lpos = pos;
   });
 
+
+  getCurrentDevices()
+
   // Ready
   player.addListener('ready', ({ device_id }) => {
+
     console.log('Ready with Device ID', device_id);
     player.setName("Chime In: " + getHumanRoomCode());
 
@@ -124,6 +128,11 @@ function createPlayer(autoConnect){
         console.log("Should have swapped");
       });
     }
+
+    console.log(token);
+    getCurrentDevices(globalToken, (err, data) => {
+      console.log(data);
+    });
 
     autoCheck(genID());
   });

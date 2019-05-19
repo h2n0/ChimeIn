@@ -49,6 +49,7 @@ function tutStep(e){
       showBox(connectBox, {blurClose:false});
       connectBox.classList.add("tutBox");
     }
+
     player.getCurrentState().then( (data) => {
       if(data == null){
         setTimeout( ()=>{

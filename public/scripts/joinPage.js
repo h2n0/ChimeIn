@@ -2,6 +2,14 @@ let roomValue = 0;
 
 window.onload = function(){
 
+
+  if( "serviceWorker" in navigator){
+    navigator.serviceWorker.register("/pwa.js").then( (reg)=>{
+      console.log("PWA worker registered!", reg);
+    });
+  }
+
+
   let join = document.getElementById("join");
   let host = document.getElementById("create");
   let idContainer = document.getElementById("sessionId");
@@ -85,8 +93,6 @@ function joinSession(id){
     showOkayDialog("One second", "You need to enter a 9 digit room code");
     return;
   }
-
-  console.log(id);
 
   let test = /([0-9]{3})/g
   let found = id.match(test);

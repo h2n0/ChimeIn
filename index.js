@@ -422,6 +422,10 @@ app.get("/logout", (req,res) => {
   res.redirect("/");
 });
 
+app.get("/offline", (req, res) => {
+  res.render("offline");
+});
+
 
 app.listen(port, () => {
   console.log("listening on http://localhost:" + port + "!");

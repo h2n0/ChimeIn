@@ -137,7 +137,7 @@ window.addEventListener("load", (e) => {
 
   let d = document.getElementById("sessionId");
   d.onkeypress = (e) => {
-    console.log(e);
+    //console.log(e);
     let code = e.charCode;
     let a = (code >= 48 && code <= 57) || code == 116 || (code == 0 && (e.keyCode == 8 || e.keyCode == 116 || e.keyCode == 117));
     return a;
