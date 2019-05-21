@@ -23,9 +23,7 @@ window.onload = () =>{
       let id = inputBox.value.trim();
       let nid = /([0-9]{3})-?([0-9]{3})-?([0-9]{3})/.exec(id)
       let accID = "" + nid[1] + nid[2] + nid[3]
-      get("/join/"+accID, (res) => {
-        console.log("HUI");
-      });
+      get("/join/"+accID);
     }else{
       alert("Need to enter a valid session ID!");
     }

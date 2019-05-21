@@ -210,7 +210,10 @@ function populateSearchList(list, guid, tracks){
                 let uri = track.uri;
                 let obj = {
                   "id" : uri,
+                  "artist": track.artists[0].id
                 }
+
+                console.log(obj);
                 post("/queue/push", makePostObject(obj), (err, data) => {
                   if(err){
                     console.error("Something has gone wrong while queueing a song");
@@ -261,10 +264,8 @@ window.onload = function(){
 
     post("/search", makePostObject(data), (err, d) =>{
       if(err){
-        console.error("Error while searching");
-        console.group("Chime In");
-        console.log(data);
-        console.groupEnd();
+        console.error("Error while searching", err);
+        return;
       }
       d = JSON.parse(d);
 
@@ -302,12 +303,14 @@ window.onload = function(){
   setInterval(()=>{
     let dom = document.getElementById("numPeople");
     get("/session/data/"+room+"/members", (data)=>{
-      let d = JSON.parse(data);
-
-      dom.innerHTML = d.members;
+      if(data == null){
+        dom.innerHTML = "0";
+      }else{
+        let d = JSON.parse(data);
+        dom.innerHTML = d.members;
+      }
     });
   }, 5000);
-
 
 
   let obj = {

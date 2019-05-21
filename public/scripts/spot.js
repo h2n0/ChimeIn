@@ -17,7 +17,6 @@ function getNextAndPlay(callback){
       }, 1000 * 2);
     }else{// Something was in the queue so we are going to try and play it
       let j = JSON.parse(data);
-      console.log(j);
       let status = j.status
       let uri = j.id;
       if(status == 201){ // Song was recommended
@@ -114,11 +113,12 @@ function createPlayer(autoConnect){
     lpos = pos;
   });
 
-
-  getCurrentDevices()
-
   // Ready
   player.addListener('ready', ({ device_id }) => {
+
+    getCurrentDevices(globalToken, (err, data)=>{
+      //console.log("Devices", data);
+    });
 
     console.log('Ready with Device ID', device_id);
     player.setName("Chime In: " + getHumanRoomCode());
@@ -129,9 +129,9 @@ function createPlayer(autoConnect){
       });
     }
 
-    console.log(token);
+    //console.log(token);
     getCurrentDevices(globalToken, (err, data) => {
-      console.log(data);
+      //console.log(data);
     });
 
     autoCheck(genID());

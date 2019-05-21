@@ -34,11 +34,51 @@ cancelButton.onclick = (e) => {
 
 connectBox.appendChild(cancelButton);
 
+let canCast = false;
+let castInitDone = false;
 
 window.addEventListener("load", (e) => {
   details.innerHTML = getHumanRoomCode();
   tutStep();
 });
+
+window['__onGCastApiAvailable'] = (a) => {
+  initCast(a);
+};
+
+function initCast(isActive){
+  console.log("IU");
+  if(isActive){
+    canCast = true;
+    initCast();
+
+    let sesh = cast.framework.CastContext.getInstance().getCurrentSession();
+    console.log(sesh);
+  }
+}
+
+
+function initCast(){
+  if(castInitDone)return;
+  castInitDone = true;
+  let holder = document.getElementById("castBtn");
+  let t = document.createElement("google-cast-launcher");
+  t.style.display = "block";
+  t.style.height = "100px";
+  holder.style.display = "block";
+  holder.style.width = "25%";
+  holder.style.margin = "0 auto";
+  holder.appendChild(t);
+
+  let options = {};
+  options.receiverApplicationId = chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID;
+  cast.framework.CastContext.getInstance().setOptions(options);
+
+  let s = castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+  console.log("Session", s);
+
+  t.click();
+}
 
 
 
@@ -58,6 +98,7 @@ function tutStep(e){
       }
       else{
         closeBox();
+
         player.setVolume(0.25).then(() => {
           console.log('Volume updated!');
 

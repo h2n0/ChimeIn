@@ -13,6 +13,7 @@ block scripts
   if host
     script(src="https://sdk.scdn.co/spotify-player.js")
     script(src= scripts + "/tutorial" + scriptEnding, type="application/javascript")
+    script(src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1")
   else
     script.
       window.addEventListener("load", (e) => {
@@ -60,3 +61,4 @@ block content
         //-  p Leave Room
         p People in the room
         p(id="numPeople") 1
+        div(id="castBtn" style="display: none")

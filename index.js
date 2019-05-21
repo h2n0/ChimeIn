@@ -161,6 +161,7 @@ app.get("/auth", (req,res) => {
             sessions[""+id] = ns;
             currentSession = ns;
             ns.sessionHandler.setTokens(token, expire, refresh);
+            ns.init(spotify);
             sessionIds.push(id);
             res.cookie("sessionHost", "true", {path:"/"});
             res.redirect("/session/"+id);
@@ -308,12 +309,16 @@ app.post("/queue/human", (req, res) => {
 app.post("/queue/push", (req,res) =>{
   let data = req.body;
   let roomId = data.room;
+
+  console.log("/queue/push", data);
+
   if(changeToRoom(roomId)){
     let songObj = {
       "id" : data.data.id,
+      "artist" : data.data.artist,
       "pusher" : data.guid
     }
-    currentSession.pushToQueue(songObj);
+    currentSession.pushToQueue(spotify, songObj);
     sendNull(res);
   }else{
     sendNull(res);
@@ -423,7 +428,21 @@ app.get("/logout", (req,res) => {
 });
 
 app.get("/offline", (req, res) => {
-  res.render("offline");
+  // if(!currentSession){
+  //   console.log("HUI");
+  //   sendNull(res);
+  // }else{
+  //   let out = [];
+  //   amt = 2;
+  //   for(let i = 0; i < amt; i++){
+  //     console.log("Rec: " + (i + 1));
+  //     currentSession.getReccSong(spotify, (data) => {
+  //       console.log(data);
+  //     });
+  //     console.log("");
+  //   }
+  //   console.log("-------------");
+    res.render("offline");
 });
 
 

@@ -9,9 +9,8 @@ const User = require("./user.js");
 
 class ChimeSession{
 
-  constructor(id, country){
+  constructor(spotify, id, country){
     this.id = id;
-    this.reccs = new AutoTrack();
     this.users = [];
     this.queue = [];
     this.currentId = null;
@@ -26,14 +25,19 @@ class ChimeSession{
     console.log("New session #" + id + " from " + country);
   }
 
+  init(spotify){
+    this.reccs = new AutoTrack(spotify, this.country);
+  }
+
   changeToThisSession(spotify){
     spotify.setAccessToken(this.sessionHandler.token);
     spotify.setRefreshToken(this.sessionHandler.refresh);
   }
 
-  pushToQueue(data){
+  pushToQueue(spotify, data){
     this.queue.push(data);
     this.currentHumanQueue = null; // So we know we need to refresh it
+    this.reccs.add(spotify, data);
   }
 
   popFromQueue(){
@@ -64,7 +68,10 @@ class ChimeSession{
     // Check if we have the data set already, no need to recompute values
     if(this.currentData){
       callback(this.currentData);
+      return;
     }
+
+    console.log("Getting new data!");
 
     // Current ID isn't set, normally because a song isn't playing
     if(!this.currentId){
@@ -75,9 +82,10 @@ class ChimeSession{
     }else{ // Is set so we just need to find out the info we need
       let id = this.currentId.split(":");
       id = id[id.length-1];
-      this.reccs.addElement(id);
 
       spotify.getTrack(id, {market: this.country}, (err,data) => {
+        //console.log("Track data ", data);
+
         if(err){
           callback(null);
         }else{
@@ -108,6 +116,19 @@ class ChimeSession{
     }
   }
 
+  getReccSong(spotify, cb){
+    spotify.getRecommendations(this.reccs.getRecommendations(spotify), (err,data) => {
+      if(err){
+        console.error("Error getting recomended songs", err);
+        if(cb){
+          cb(null);
+        }
+      }else{
+        cb(data);
+      }
+    });
+  }
+
   getNextSong(spotify, callback){
     let nextInQueue = this.queue[0] || null;
     this.currentId = null;
@@ -127,19 +148,16 @@ class ChimeSession{
       resp.pushedBy = nextInQueue.pusher;
       callback(resp);
     }else{ // Isn't a song next in the queue so get a reccomendation
-      let recData = {
-        min_energy: 0.4,
-        seed_tracks: this.reccs.getQueue(),
-        min_populatiry: 50,
-        market: this.country
-      };
-
-      spotify.getRecommendations(recData, (err,data) => {
+      this.getReccSong(spotify, (err, data) => {
         if(err){
-          console.error(err.statusCode);
-          console.log("Error?");
+          console.error("Error with reccomendations", err);
           callback(null);
         }else{
+          if(data == null){
+            console.error("No suggested song", err);
+            callback(null);
+            return;
+          }
           let tracks = data.body.tracks;
           let index = Math.floor(Math.random() * tracks.length);
           let t = tracks[index];

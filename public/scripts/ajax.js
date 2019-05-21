@@ -89,7 +89,7 @@ function getCurrentDevices(token, cb){
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       if(cb){
-        cb(null, this.responseText);
+        cb(null, JSON.parse(this.responseText).devices);
       }
     }
   };
@@ -106,7 +106,6 @@ function getCurrentPlayingSong(token, callback){
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status >= 200) {
       let code = this.status - 200;
-      console.log(this.status);
       if(code == 0){ // Okay
         callback(this.responseText);
       }else if(code == 4){// Private or no devices

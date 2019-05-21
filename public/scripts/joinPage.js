@@ -54,7 +54,7 @@ window.onload = function(){
       return;
     }
 
-    joinSession(stripInput(v));
+    joinSession(stripInput(idContainer.value.trim()));
   }
 }
 
