@@ -9,7 +9,7 @@ const User = require("./user.js");
 
 class ChimeSession{
 
-  constructor(spotify, id, country){
+  constructor(id, country){
     this.id = id;
     this.users = [];
     this.queue = [];
