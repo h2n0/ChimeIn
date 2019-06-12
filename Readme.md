@@ -1,4 +1,7 @@
+
 ![ChimeIn](public/assets/icons/128/128.png)
+# ChimeIn
+
 
 ## About
 [ChimeIn](https://chimein.live) is an app that allows users to add songs to a Spotify queue from any device, useful for parties and social gatherings of any size. Just connect and play.
