@@ -1,6 +1,6 @@
 let express = require("express");
 let app = express();
-let port = 1337;
+let port = 8888;
 let cookie = require("cookie-parser");
 let SpotifyWebApi = require('spotify-web-api-node');
 let bodyParser = require("body-parser");
